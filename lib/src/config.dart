@@ -60,7 +60,6 @@ class Config {
 
     final Map<String, dynamic> config = {};
     config.addAll({
-      "maxNftspossible": maxNfts!,
       "maxNfts": maxNfts!,
       "cidCode": "<-- Your CID Code-->",
       "layers": layerEntries

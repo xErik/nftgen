@@ -1,16 +1,7 @@
 {
-  "maxNftspossible": 324,
-  "maxNfts": 324,
+  "maxNfts": 50,
   "cidCode": "ppppp",
   "layers": [
-    {
-      "name": "Background",
-      "directory": "Background",
-      "enabled": 1.0,
-      "weights": {
-        "Black#1.png": 1
-      }
-    },
     {
       "name": "Eyeball",
       "directory": "Eyeball",
@@ -54,7 +45,7 @@
     {
       "name": "Bottom lid",
       "directory": "Bottom lid",
-      "enabled": 1.0,
+      "enabled": 0.25,
       "weights": {
         "High#20.png": 1,
         "Low#40.png": 1,
@@ -64,11 +55,19 @@
     {
       "name": "Top lid",
       "directory": "Top lid",
-      "enabled": 1.0,
+      "enabled": 0.25,
       "weights": {
         "High#30.png": 1,
         "Low#20.png": 1,
         "Middle#50.png": 1
+      }
+    },
+    {
+      "name": "Goo",
+      "directory": "Goo",
+      "enabled": 0.5,
+      "weights": {
+        "Green#1.png": 1
       }
     }
   ]

@@ -44,12 +44,12 @@ class Nft {
         nftDna = '';
 
         for (var layer in layers) {
-          final layerName = layer['name'] as String;
-          final layerDir = Directory(layer['directory'] as String);
-          final layerEnabled = layer['enabled'] as double;
+          final String layerName = layer['name'] as String;
+          final Directory layerDir = Directory(layer['directory'] as String);
+          final double layerEnabled = layer['enabled'];
           final Map<String, int> layerWeights = Map.from(layer['weights']);
 
-          if (rnd.nextDouble() >= layerEnabled) {
+          if (layerEnabled == 0.0 || rnd.nextDouble() >= layerEnabled) {
             continue;
           }
 
