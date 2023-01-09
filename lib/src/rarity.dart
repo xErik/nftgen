@@ -143,14 +143,15 @@ class Rarity {
     int y0 = 0;
     for (var x = 0; x < entries.length; x++) {
       // cmd.drawPixel(x, entries[x].value.toInt(), red);
-      final y = entries[x].value.toInt();
+      final y = entries[x].value.round();
+      print("$x $y");
       cmd.drawLine(x1: x0, y1: y0, x2: x, y2: y, color: red);
       x0 = x;
       y0 = y;
     }
 
     final int wNew;
-    final factor;
+    final double factor;
     final int hNew;
 
     if (width >= height) {

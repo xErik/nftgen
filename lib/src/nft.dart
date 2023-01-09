@@ -78,19 +78,20 @@ class Nft {
       // -----------------------------------------------------
       // IMAGE
       // -----------------------------------------------------
+      if (false) {
+        final canvas =
+            ig.Image(width: nftSize['width']!, height: nftSize["height"]!);
 
-      final canvas =
-          ig.Image(width: nftSize['width']!, height: nftSize["height"]!);
+        for (var imageFile in imageFiles) {
+          final bytes = await ig.decodeImageFile(imageFile.path);
+          ig.compositeImage(canvas, bytes!);
+        }
 
-      for (var imageFile in imageFiles) {
-        final bytes = await ig.decodeImageFile(imageFile.path);
-        ig.compositeImage(canvas, bytes!);
+        var fileImage =
+            '${genImagesDir.path}${Platform.pathSeparator}$nftId.png';
+        print('${nftId.toString().padLeft(4, " ")} $fileImage $nftDna');
+        File(fileImage).writeAsBytesSync(ig.encodePng(canvas));
       }
-
-      var fileImage = '${genImagesDir.path}${Platform.pathSeparator}$nftId.png';
-      print('${nftId.toString().padLeft(4, " ")} $fileImage $nftDna');
-      File(fileImage).writeAsBytesSync(ig.encodePng(canvas));
-
       // -----------------------------------------------------
       // META
       // -----------------------------------------------------
