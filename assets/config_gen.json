@@ -1,29 +1,30 @@
 {
   "maxNftspossible": 324,
   "maxNfts": 324,
+  "cidCode": "qqqq",
+  "cidCodeReplace": "abc",
   "layers": [
     {
       "name": "Background",
       "directory": "Background",
-      "required": true,
+      "enabled": 1.0,
       "weights": {
         "Black#1.png": 1
       }
     },
     {
-      "name": "Bottom lid",
-      "directory": "Bottom lid",
-      "required": true,
+      "name": "Eyeball",
+      "directory": "Eyeball",
+      "enabled": 1.0,
       "weights": {
-        "High#20.png": 1,
-        "Low#40.png": 8,
-        "Middle#40.png": 27
+        "Red#50.png": 1,
+        "White#50.png": 8
       }
     },
     {
       "name": "Eye color",
       "directory": "Eye color",
-      "required": true,
+      "enabled": 1.0,
       "weights": {
         "Cyan#1.png": 1,
         "Green#1.png": 8,
@@ -34,26 +35,9 @@
       }
     },
     {
-      "name": "Eyeball",
-      "directory": "Eyeball",
-      "required": true,
-      "weights": {
-        "Red#50.png": 1,
-        "White#50.png": 8
-      }
-    },
-    {
-      "name": "Goo",
-      "directory": "Goo",
-      "required": true,
-      "weights": {
-        "Green#1.png": 1
-      }
-    },
-    {
       "name": "Iris",
       "directory": "Iris",
-      "required": true,
+      "enabled": 1.0,
       "weights": {
         "Large#20.png": 1,
         "Medium#20.png": 8,
@@ -63,15 +47,25 @@
     {
       "name": "Shine",
       "directory": "Shine",
-      "required": true,
+      "enabled": 1.0,
       "weights": {
         "Shapes#100.png": 1
       }
     },
     {
+      "name": "Bottom lid",
+      "directory": "Bottom lid",
+      "enabled": 1.0,
+      "weights": {
+        "High#20.png": 1,
+        "Low#40.png": 8,
+        "Middle#40.png": 27
+      }
+    },
+    {
       "name": "Top lid",
       "directory": "Top lid",
-      "required": true,
+      "enabled": 1.0,
       "weights": {
         "High#30.png": 1,
         "Low#20.png": 8,
