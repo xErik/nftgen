@@ -1,0 +1,39 @@
+{
+    "name": "0",
+    "description": "",
+    "image": "ipfs://<-- Your CID Code-->/00.png",
+    "attributes": [
+        {
+            "trait_type": "Background",
+            "value": "white"
+        },
+        {
+            "trait_type": "Body",
+            "value": "maroon"
+        },
+        {
+            "trait_type": "Eyes",
+            "value": "standard"
+        },
+        {
+            "trait_type": "Head Gear",
+            "value": "std_lord"
+        },
+        {
+            "trait_type": "Clothes",
+            "value": "blue_dot"
+        },
+        {
+            "trait_type": "Held Item",
+            "value": "nut"
+        },
+        {
+            "trait_type": "Hands",
+            "value": "standard"
+        },
+        {
+            "trait_type": "Wristband",
+            "value": "yellow"
+        }
+    ]
+}
