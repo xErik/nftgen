@@ -2,9 +2,10 @@ import 'dart:io';
 
 import 'package:nft_generate/src/config.dart';
 import 'package:nft_generate/src/nft.dart';
+import 'package:nft_generate/src/rarity.dart';
 import 'package:nft_generate/src/shared/io.dart';
 
-void main(List<String> args) {
+void main(List<String> args) async {
   if (args.isEmpty) {
     usage();
     return;
@@ -31,6 +32,25 @@ void main(List<String> args) {
     final cidReplace = args.length >= 5 ? args[4] : '';
     Config.setCidMetadata(configFile, genMetaDir,
         cidReplace: cid, cidSearch: cidReplace);
+  } else if (args[0] == 'rarity') {
+    final metaDir = Directory(args[1]);
+    final csvNftFile = File(args[2]);
+    final csvLayersFile = File(args[3]);
+    final imgNftFile = '${args[2].replaceAll('.csv', '')}.png';
+    final imgLayersFile = '${args[3].replaceAll('.csv', '')}.png';
+
+    List<MapEntry<String, double>> sortedNft = Rarity.nfts(metaDir);
+    List<MapEntry<String, double>> sortedAttr = Rarity.layers(metaDir);
+
+    await Rarity.drawChart(imgNftFile, sortedNft, 'NFTs: high = high rarity');
+    await Rarity.drawChart(
+        imgLayersFile, sortedAttr, 'Attributes: low = high rarity');
+
+    Io.save(sortedNft, csvNftFile);
+    Io.save(sortedAttr, csvLayersFile);
+
+    print('Rarity NFTs: ${csvNftFile.path} (large = rare)');
+    print('Rarity Layers: ${csvLayersFile.path} (small = rare)');
   } else {
     usage();
   }
@@ -52,6 +72,12 @@ void usage() {
   print(
       " nft_generate cid <IN-CONFIG-FILE> <OUT-META-DIR> [<CID>, <CID-REPLACE>]");
 
+  print("\n * Generate rarity reports basd on metadata directory:\n");
+  print(
+      " nft_generate rarity <IN-META-DIR> <OUT-RARITY-NFT.CSV> <OUT-RARITY-LAYERS.CSV>");
+
+  // ---
+
   print("\nEXAMPLES\n");
   print(
       " * Generate a config with equal weight distribution and ordered layers:\n");
@@ -68,4 +94,8 @@ void usage() {
 
   print("\n * Replace CID with CID-REPLACE read from config to metadata:\n");
   print(" nft_generate cid .\\assets\\config_gen.json  .\\assets\\meta\\");
+
+  print("\n * Generate rarity reports basd on metadata directory:\n");
+  print(
+      " nft_generate rarity .\\assets\\meta\\ .\\assets\\rarity_nft.csv .\\assets\\rarity_layers.csv");
 }

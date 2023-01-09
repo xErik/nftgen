@@ -1,5 +1,5 @@
 {
-  "maxNfts": 50,
+  "maxNfts": 250,
   "cidCode": "ppppp",
   "layers": [
     {
@@ -17,11 +17,11 @@
       "enabled": 1.0,
       "weights": {
         "Cyan#1.png": 1,
-        "Green#1.png": 1,
-        "Pink#1.png": 1,
-        "Purple#1.png": 1,
-        "Red#1.png": 1,
-        "Yellow#10.png": 1
+        "Green#1.png": 2,
+        "Pink#1.png": 2,
+        "Purple#1.png": 4,
+        "Red#1.png": 4,
+        "Yellow#10.png": 4
       }
     },
     {
@@ -30,8 +30,8 @@
       "enabled": 1.0,
       "weights": {
         "Large#20.png": 1,
-        "Medium#20.png": 1,
-        "Small#60.png": 1
+        "Medium#20.png": 2,
+        "Small#60.png": 4
       }
     },
     {
@@ -48,8 +48,8 @@
       "enabled": 0.25,
       "weights": {
         "High#20.png": 1,
-        "Low#40.png": 1,
-        "Middle#40.png": 1
+        "Low#40.png": 2,
+        "Middle#40.png": 4
       }
     },
     {
@@ -58,14 +58,14 @@
       "enabled": 0.25,
       "weights": {
         "High#30.png": 1,
-        "Low#20.png": 1,
-        "Middle#50.png": 1
+        "Low#20.png": 2,
+        "Middle#50.png": 4
       }
     },
     {
       "name": "Goo",
       "directory": "Goo",
-      "enabled": 0.5,
+      "enabled": 0.1,
       "weights": {
         "Green#1.png": 1
       }
