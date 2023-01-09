@@ -1,8 +1,7 @@
 {
   "maxNftspossible": 324,
   "maxNfts": 324,
-  "cidCode": "qqqq",
-  "cidCodeReplace": "abc",
+  "cidCode": "ppppp",
   "layers": [
     {
       "name": "Background",
@@ -18,7 +17,7 @@
       "enabled": 1.0,
       "weights": {
         "Red#50.png": 1,
-        "White#50.png": 8
+        "White#50.png": 1
       }
     },
     {
@@ -27,11 +26,11 @@
       "enabled": 1.0,
       "weights": {
         "Cyan#1.png": 1,
-        "Green#1.png": 8,
-        "Pink#1.png": 27,
-        "Purple#1.png": 64,
-        "Red#1.png": 125,
-        "Yellow#10.png": 216
+        "Green#1.png": 1,
+        "Pink#1.png": 1,
+        "Purple#1.png": 1,
+        "Red#1.png": 1,
+        "Yellow#10.png": 1
       }
     },
     {
@@ -40,8 +39,8 @@
       "enabled": 1.0,
       "weights": {
         "Large#20.png": 1,
-        "Medium#20.png": 8,
-        "Small#60.png": 27
+        "Medium#20.png": 1,
+        "Small#60.png": 1
       }
     },
     {
@@ -58,8 +57,8 @@
       "enabled": 1.0,
       "weights": {
         "High#20.png": 1,
-        "Low#40.png": 8,
-        "Middle#40.png": 27
+        "Low#40.png": 1,
+        "Middle#40.png": 1
       }
     },
     {
@@ -68,8 +67,8 @@
       "enabled": 1.0,
       "weights": {
         "High#30.png": 1,
-        "Low#20.png": 8,
-        "Middle#50.png": 27
+        "Low#20.png": 1,
+        "Middle#50.png": 1
       }
     }
   ]

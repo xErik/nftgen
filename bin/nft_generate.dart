@@ -30,7 +30,7 @@ void main(List<String> args) {
     final cid = args.length >= 4 ? args[3] : '';
     final cidReplace = args.length >= 5 ? args[4] : '';
     Config.setCidMetadata(configFile, genMetaDir,
-        cid: cid, cidReplace: cidReplace);
+        cidReplace: cid, cidSearch: cidReplace);
   } else {
     usage();
   }

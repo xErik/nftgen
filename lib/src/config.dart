@@ -6,8 +6,6 @@ import 'package:path/path.dart';
 
 /// Generates a config file to generate NFTs.
 class Config {
-  static final String _cidPlaceholder = "<-- Your CID Code-->";
-
   /// Generates a config file to generate NFTs based on a layers directory,
   /// a factor for weight distribution and the order of layers.
   ///
@@ -64,7 +62,7 @@ class Config {
     config.addAll({
       "maxNftspossible": maxNfts!,
       "maxNfts": maxNfts!,
-      "cidCode": _cidPlaceholder,
+      "cidCode": "<-- Your CID Code-->",
       "layers": layerEntries
     });
 
@@ -81,17 +79,21 @@ class Config {
   /// Reads the `cid` code from the config and writes it to all
   /// files in the metadata directory.
   static void setCidMetadata(File configFile, Directory metaDir,
-      {String cid = "", String cidReplace = ""}) {
+      {String cidReplace = "", String cidSearch = ""}) {
     final config = Io.readJson(configFile);
 
-    cid = cid.isEmpty ? config['cidCode'] : cid;
-    cidReplace = cidReplace.isEmpty ? config['cidCodeReplace'] : cidReplace;
+    cidReplace = cidReplace.isEmpty ? config['cidCode'] : cidReplace;
+    cidSearch = cidSearch.isEmpty ? config['cidCode'] : cidSearch;
 
-    print('REPLACING cid "$cid" with "$cidReplace" ...');
+    if (cidReplace == cidSearch) {
+      print("Aboring, Search equals replace: $cidSearch == $cidReplace ");
+      return;
+    }
 
-    if (config['cidCode'] != cid || config['cidCodeReplace'] != cidReplace) {
-      config['cidCode'] = cid;
-      config['cidCodeReplace'] = cidReplace;
+    print('REPLACING cid "$cidSearch" with "$cidReplace" ...');
+
+    if (config['cidCode'] != cidReplace) {
+      config['cidCode'] = cidReplace;
       Io.writeJson(configFile, config);
     }
 
@@ -99,7 +101,8 @@ class Config {
     for (var entry in entries) {
       final file = File(entry.path);
       final json = Io.readJson(file);
-      json['image'] = json['image']!.toString().replaceFirst(cidReplace, cid);
+      json['image'] =
+          json['image']!.toString().replaceAll(cidSearch, cidReplace);
       Io.writeJson(file, json);
     }
   }
