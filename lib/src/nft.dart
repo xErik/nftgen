@@ -13,7 +13,8 @@ class Nft {
   /// layers in sub-directories, a directory for image output,
   /// a directory for metadata output.
   static void generate(File configFile, Directory layersDir,
-      Directory genImagesDir, Directory genMetaDir) async {
+      Directory imagesDir, Directory metaDir,
+      {bool metaOnly = false}) async {
     final rnd = Random.secure();
     final cache = Cache(rnd);
     final dna = Dna();
@@ -25,10 +26,10 @@ class Nft {
 
     // print("Size of layers ${nftSize['width']} x ${nftSize["height"]}");
 
-    genImagesDir.deleteSync(recursive: true);
-    genMetaDir.deleteSync(recursive: true);
-    genImagesDir.createSync(recursive: true);
-    genMetaDir.createSync(recursive: true);
+    imagesDir.deleteSync(recursive: true);
+    metaDir.deleteSync(recursive: true);
+    imagesDir.createSync(recursive: true);
+    metaDir.createSync(recursive: true);
 
     final Map<int, Map<String, dynamic>> generated = {};
 
@@ -77,7 +78,7 @@ class Nft {
       // -----------------------------------------------------
       // IMAGE
       // -----------------------------------------------------
-      if (false) {
+      if (metaOnly == false) {
         final canvas =
             ig.Image(width: nftSize['width']!, height: nftSize["height"]!);
 
@@ -86,8 +87,7 @@ class Nft {
           ig.compositeImage(canvas, bytes!);
         }
 
-        var fileImage =
-            '${genImagesDir.path}${Platform.pathSeparator}$nftId.png';
+        var fileImage = '${imagesDir.path}${Platform.pathSeparator}$nftId.png';
         print('${nftId.toString().padLeft(4, " ")} $fileImage $nftDna');
         File(fileImage).writeAsBytesSync(ig.encodePng(canvas));
       }
@@ -105,7 +105,7 @@ class Nft {
         }
       });
 
-      var fileMeta = '${genMetaDir.path}${Platform.pathSeparator}$nftId.json';
+      var fileMeta = '${metaDir.path}${Platform.pathSeparator}$nftId.json';
       print('${nftId.toString().padLeft(4, " ")} $fileMeta $nftDna');
       Io.writeJson(File(fileMeta), generated[nftId]!);
     }

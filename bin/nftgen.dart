@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:nftgen/src/config.dart';
@@ -23,8 +24,11 @@ void main(List<String> args) async {
     final configFile = File(args[2]);
     final genImagesDir = Directory(args[3]);
     final genMetaDir = Directory(args[4]);
+    final metaOnly =
+        args.length >= 6 ? args[5].toLowerCase() == 'metaonly' : false;
 
-    Nft.generate(configFile, layersDir, genImagesDir, genMetaDir);
+    Nft.generate(configFile, layersDir, genImagesDir, genMetaDir,
+        metaOnly: metaOnly);
   } else if (args[0] == "cid") {
     final configFile = File(args[1]);
     final genMetaDir = Directory(args[2]);
@@ -65,7 +69,7 @@ void usage() {
 
   print('\n* Generate NFTs based on a config-json file:\n');
   print(
-      "  nftgen nft <IN-CONFIG-FILE> <IN-LAYERS-DIR> <OUT-IMAGE-DIR> <OUT-META-DIR>");
+      "  nftgen nft <IN-CONFIG-FILE> <IN-LAYERS-DIR> <OUT-IMAGE-DIR> <OUT-META-DIR> [metaOnly]");
 
   print(
       '\n* Add CID code read from config or given as parameter to metadata files:\n');
@@ -86,6 +90,10 @@ void usage() {
   print("\n* Generate NFTs based on a config:\n");
   print(
       "  nftgen nft .\\assets\\layers\\ .\\assets\\config_gen.json  .\\assets\\images\\ .\\assets\\meta\\");
+
+  print("\n* Generate NFTs based on a config but METADATA only:\n");
+  print(
+      "  nftgen nft .\\assets\\layers\\ .\\assets\\config_gen.json  .\\assets\\images\\ .\\assets\\meta\\ metaonly");
 
   print("\n* Add CID code given as parameter to config and metadata:\n");
   print(

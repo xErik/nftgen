@@ -37,6 +37,11 @@ nftgen config .\assets\layers\ .\assets\config_gen.json 0.0 "Background,Eyeball,
 
 nftgen nft .\assets\layers\ .\assets\config_gen.json  .\assets\images\ .\assets\meta\
 
+// Or create metadata only to validate rarity distribution (Faster)
+// Adjust config file until rarity distribution is OK
+
+nftgen nft .\assets\layers\ .\assets\config_gen.json  .\assets\images\ .\assets\meta\ metaonly
+
 nftgen rarity .\assets\meta\ .\assets\rarity_nft.csv .\assets\rarity_layers.csv
 ```
 
