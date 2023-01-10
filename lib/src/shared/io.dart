@@ -14,7 +14,8 @@ class Io {
   }
 
   /// Saves `sortedEntries` to `csvFile`.
-  static void save(List<MapEntry<String, double>> sortedEntries, File csvFile) {
+  static void writeCsv(
+      List<MapEntry<String, double>> sortedEntries, File csvFile) {
     var outCsv = '';
 
     for (var entry in sortedEntries) {

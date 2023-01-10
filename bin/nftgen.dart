@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:nft_generate/src/config.dart';
-import 'package:nft_generate/src/nft.dart';
-import 'package:nft_generate/src/rarity.dart';
-import 'package:nft_generate/src/shared/io.dart';
+import 'package:nftgen/src/config.dart';
+import 'package:nftgen/src/nft.dart';
+import 'package:nftgen/src/rarity.dart';
+import 'package:nftgen/src/shared/io.dart';
 
 void main(List<String> args) async {
   if (args.isEmpty) {
@@ -30,7 +30,7 @@ void main(List<String> args) async {
     final genMetaDir = Directory(args[2]);
     final cid = args.length >= 4 ? args[3] : '';
     final cidReplace = args.length >= 5 ? args[4] : '';
-    Config.setCidMetadata(configFile, genMetaDir,
+    Config.updateCidMetadata(configFile, genMetaDir,
         cidReplace: cid, cidSearch: cidReplace);
   } else if (args[0] == 'rarity') {
     final metaDir = Directory(args[1]);
@@ -46,8 +46,8 @@ void main(List<String> args) async {
     await Rarity.drawChart(
         imgLayersFile, sortedAttr, 'Attributes: low = high rarity');
 
-    Io.save(sortedNft, csvNftFile);
-    Io.save(sortedAttr, csvLayersFile);
+    Io.writeCsv(sortedNft, csvNftFile);
+    Io.writeCsv(sortedAttr, csvLayersFile);
 
     print('Rarity NFTs: ${csvNftFile.path} (large = rare)');
     print('Rarity Layers: ${csvLayersFile.path} (small = rare)');
@@ -59,43 +59,42 @@ void main(List<String> args) async {
 void usage() {
   print('USAGE\n');
 
-  print(' * Generate a config-json file:\n');
+  print('* Generate a config-json file:\n');
   print(
-      " nft_generate config <IN-LAYERS-DIR> <OUT-CONFIG-FILE> [<WEIGHT-FACTOR>:3.0]");
+      "  nftgen config <IN-LAYERS-DIR> <OUT-CONFIG-FILE> [<WEIGHT-FACTOR>:3.0]");
 
-  print('\n * Generate NFTs based on a config-json file:\n');
+  print('\n* Generate NFTs based on a config-json file:\n');
   print(
-      " nft_generate nft <IN-CONFIG-FILE> <IN-LAYERS-DIR> <OUT-IMAGE-DIR> <OUT-META-DIR>");
+      "  nftgen nft <IN-CONFIG-FILE> <IN-LAYERS-DIR> <OUT-IMAGE-DIR> <OUT-META-DIR>");
 
   print(
-      '\n * Add CID code read from config or given as parameter to metadata files:\n');
-  print(
-      " nft_generate cid <IN-CONFIG-FILE> <OUT-META-DIR> [<CID>, <CID-REPLACE>]");
+      '\n* Add CID code read from config or given as parameter to metadata files:\n');
+  print("  nftgen cid <IN-CONFIG-FILE> <OUT-META-DIR> [<CID>, <CID-REPLACE>]");
 
-  print("\n * Generate rarity reports basd on metadata directory:\n");
+  print("\n* Generate rarity reports basd on metadata directory:\n");
   print(
-      " nft_generate rarity <IN-META-DIR> <OUT-RARITY-NFT.CSV> <OUT-RARITY-LAYERS.CSV>");
+      "  nftgen rarity <IN-META-DIR> <OUT-RARITY-NFT.CSV> <OUT-RARITY-LAYERS.CSV>");
 
   // ---
 
   print("\nEXAMPLES\n");
   print(
-      " * Generate a config with equal weight distribution and ordered layers:\n");
+      "* Generate a config with equal weight distribution and ordered layers:\n");
   print(
-      ' nft_generate config .\\assets\\layers\\ .\\assets\\config_gen.json 0.0 "Background,Eyeball,Eye color,Iris,Shine,Bottom lid,Top lid"');
+      '  nftgen config .\\assets\\layers\\ .\\assets\\config_gen.json 0.0 "Background,Eyeball,Eye color,Iris,Shine,Bottom lid,Top lid"');
 
-  print("\n * Generate NFTs based on a config:\n");
+  print("\n* Generate NFTs based on a config:\n");
   print(
-      " nft_generate nft .\\assets\\layers\\ .\\assets\\config_gen.json  .\\assets\\images\\ .\\assets\\meta\\");
+      "  nftgen nft .\\assets\\layers\\ .\\assets\\config_gen.json  .\\assets\\images\\ .\\assets\\meta\\");
 
-  print("\n * Add CID code given as parameter to config and metadata:\n");
+  print("\n* Add CID code given as parameter to config and metadata:\n");
   print(
-      " nft_generate cid .\\assets\\config_gen.json  .\\assets\\meta\\ NEW-CID-CODE OLD-CID-CODE");
+      "  nftgen cid .\\assets\\config_gen.json  .\\assets\\meta\\ NEW-CID-CODE OLD-CID-CODE");
 
-  print("\n * Replace CID with CID-REPLACE read from config to metadata:\n");
-  print(" nft_generate cid .\\assets\\config_gen.json  .\\assets\\meta\\");
+  print("\n* Replace CID with CID-REPLACE read from config to metadata:\n");
+  print("  nftgen cid .\\assets\\config_gen.json  .\\assets\\meta\\");
 
-  print("\n * Generate rarity reports basd on metadata directory:\n");
+  print("\n* Generate rarity reports basd on metadata directory:\n");
   print(
-      " nft_generate rarity .\\assets\\meta\\ .\\assets\\rarity_nft.csv .\\assets\\rarity_layers.csv");
+      "  nftgen rarity .\\assets\\meta\\ .\\assets\\rarity_nft.csv .\\assets\\rarity_layers.csv");
 }

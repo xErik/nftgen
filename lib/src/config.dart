@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 
-import 'package:nft_generate/src/shared/io.dart';
+import 'package:nftgen/src/shared/io.dart';
 import 'package:path/path.dart';
 
 /// Generates a config file to generate NFTs.
@@ -28,7 +28,7 @@ class Config {
         configEntry.addAll({
           "name": layerName,
           "directory": layerName,
-          "enabled": 1.0,
+          "probability": 1.0,
           "weights": weights
         });
         layerEntries.add(configEntry);
@@ -77,7 +77,7 @@ class Config {
 
   /// Reads the `cid` code from the config and writes it to all
   /// files in the metadata directory.
-  static void setCidMetadata(File configFile, Directory metaDir,
+  static void updateCidMetadata(File configFile, Directory metaDir,
       {String cidReplace = "", String cidSearch = ""}) {
     final config = Io.readJson(configFile);
 

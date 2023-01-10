@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 
-import 'package:nft_generate/src/shared/io.dart';
+import 'package:nftgen/src/shared/io.dart';
 
 import 'package:image/image.dart' as ig;
 
@@ -115,36 +115,22 @@ class Rarity {
 
   static Future drawChart(String imgFile,
       List<MapEntry<String, double>> entries, String label) async {
-    final maxX = entries.length;
-    final maxY = entries.last.value.toInt();
-    final width = maxX;
-    final height = maxY;
+    final width = entries.length;
+    final height = entries.last.value.toInt();
 
     final red = ig.ColorRgb8(255, 0, 0);
     final black = ig.ColorRgb8(0, 0, 0);
-
-    // entries = entries.reversed.toList();
-
-    print("IMG: $width x $height");
-
-    // int x = 0;
-    // List<ig.Point> vertices = entries.map<ig.Point>((e) {
-    //   return ig.Point(x++, e.value);
-    // }).toList();
+    final white = ig.ColorRgb8(255, 255, 255);
 
     final cmd = ig.Command()
       ..createImage(width: width, height: height)
-      ..fill(color: ig.ColorRgb8(255, 255, 255));
-    // ..drawString(label,
-    //     font: ig.arial14, x: 0, y: 0, color: ig.ColorRgb8(0, 0, 0));
+      ..fill(color: white);
 
-    // cmd.drawPolygon(vertices: vertices, color: ig.ColorRgb8(255, 0, 0));
     int x0 = 0;
     int y0 = 0;
     for (var x = 0; x < entries.length; x++) {
-      // cmd.drawPixel(x, entries[x].value.toInt(), red);
       final y = entries[x].value.round();
-      print("$x $y");
+      // print("$x $y");
       cmd.drawLine(x1: x0, y1: y0, x2: x, y2: y, color: red);
       x0 = x;
       y0 = y;
@@ -164,7 +150,7 @@ class Rarity {
       wNew = (width * factor).toInt();
     }
 
-    print("$wNew x $hNew");
+    print("CREATE GRAPH: $label, $wNew x $hNew");
 
     cmd
       ..copyResize(width: wNew, height: hNew)

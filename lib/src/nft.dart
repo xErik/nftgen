@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
@@ -46,10 +45,10 @@ class Nft {
         for (var layer in layers) {
           final String layerName = layer['name'] as String;
           final Directory layerDir = Directory(layer['directory'] as String);
-          final double layerEnabled = layer['enabled'];
+          final double layerProbability = layer['probability'];
           final Map<String, int> layerWeights = Map.from(layer['weights']);
 
-          if (layerEnabled == 0.0 || rnd.nextDouble() >= layerEnabled) {
+          if (layerProbability == 0.0 || rnd.nextDouble() >= layerProbability) {
             continue;
           }
 

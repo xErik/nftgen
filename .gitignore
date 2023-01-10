@@ -6,3 +6,9 @@
 build/
 assets/images/
 assets/meta/
+assets/config_gen.json
+assets/rarity_layers.csv
+assets/rarity_layers.png
+assets/rarity_nft.csv
+assets/rarity_nft.png
+assets/config_gen.json

@@ -5,7 +5,7 @@
     {
       "name": "Eyeball",
       "directory": "Eyeball",
-      "enabled": 1.0,
+      "probability": 1.0,
       "weights": {
         "Red#50.png": 1,
         "White#50.png": 16
@@ -14,7 +14,7 @@
     {
       "name": "Eye color",
       "directory": "Eye color",
-      "enabled": 0.8,
+      "probability": 0.8,
       "weights": {
         "Cyan#1.png": 1,
         "Green#1.png": 16,
@@ -27,7 +27,7 @@
     {
       "name": "Iris",
       "directory": "Iris",
-      "enabled": 0.16,
+      "probability": 0.16,
       "weights": {
         "Large#20.png": 1,
         "Medium#20.png": 16,
@@ -37,7 +37,7 @@
     {
       "name": "Shine",
       "directory": "Shine",
-      "enabled": 0.08,
+      "probability": 0.08,
       "weights": {
         "Shapes#100.png": 1
       }
@@ -45,7 +45,7 @@
     {
       "name": "Bottom lid",
       "directory": "Bottom lid",
-      "enabled": 0.04,
+      "probability": 0.04,
       "weights": {
         "High#20.png": 1,
         "Low#40.png": 16,
@@ -55,7 +55,7 @@
     {
       "name": "Top lid",
       "directory": "Top lid",
-      "enabled": 0.02,
+      "probability": 0.02,
       "weights": {
         "High#30.png": 1, 
         "Low#20.png": 16, 
@@ -65,7 +65,7 @@
     {
       "name": "Goo",
       "directory": "Goo",
-      "enabled": 0.01,
+      "probability": 0.01,
       "weights": {
         "Green#1.png": 1
       }
