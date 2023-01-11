@@ -113,7 +113,7 @@ class Rarity {
     return sortedEntries;
   }
 
-  /// Draws a small line chart, displaying the `entried` and saves it locally.
+  /// Draws a small line chart, displaying the `entries` and saves it locally.
   static Future drawChart(String imgFile,
       List<MapEntry<String, double>> entries, String label) async {
     final width = entries.length;

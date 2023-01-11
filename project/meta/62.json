@@ -1,20 +1,28 @@
 {
   "name": "Your NFT #62",
   "description": "",
-  "image": "ipfs://<-- Your CID Code-->/62.png",
-  "dna": "9d8969e17097a330f6a8eb4abadb1b7c",
+  "image": "ipfs://NEW-CID/62.png",
+  "dna": "7177bb0649d5e03ddea9ba4c075d6a6d",
   "attributes": [
     {
       "trait_type": "Background",
       "value": "Black"
     },
     {
+      "trait_type": "Bottom lid",
+      "value": "Middle"
+    },
+    {
+      "trait_type": "Eye color",
+      "value": "Cyan"
+    },
+    {
       "trait_type": "Eyeball",
       "value": "White"
     },
     {
-      "trait_type": "Eye color",
-      "value": "Yellow"
+      "trait_type": "Goo",
+      "value": "Green"
     },
     {
       "trait_type": "Iris",
@@ -25,12 +33,8 @@
       "value": "Shapes"
     },
     {
-      "trait_type": "Bottom lid",
-      "value": "Low"
-    },
-    {
       "trait_type": "Top lid",
-      "value": "High"
+      "value": "Middle"
     }
   ]
 }

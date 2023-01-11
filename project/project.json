@@ -15,7 +15,7 @@
     "metaDir": "meta",
     "imageDir": "image",
     "rarityNftCsv": "rarity_nft.csv",
-    "raritynftPng": "rarity_nft.png",
+    "rarityNftPng": "rarity_nft.png",
     "rarityLayersCsv": "rarity_layers.csv",
     "rarityLayersPng": "rarity_layers.png"
 }

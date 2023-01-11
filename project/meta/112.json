@@ -1,20 +1,28 @@
 {
   "name": "Your NFT #112",
   "description": "",
-  "image": "ipfs://<-- Your CID Code-->/112.png",
-  "dna": "d1dab93803648aa1337d33ed16d2462b",
+  "image": "ipfs://NEW-CID/112.png",
+  "dna": "be4a196751ffa7746075099f5bc14a33",
   "attributes": [
     {
       "trait_type": "Background",
       "value": "Black"
     },
     {
-      "trait_type": "Eyeball",
-      "value": "White"
+      "trait_type": "Bottom lid",
+      "value": "Middle"
     },
     {
       "trait_type": "Eye color",
+      "value": "Yellow"
+    },
+    {
+      "trait_type": "Eyeball",
       "value": "Red"
+    },
+    {
+      "trait_type": "Goo",
+      "value": "Green"
     },
     {
       "trait_type": "Iris",
@@ -25,12 +33,8 @@
       "value": "Shapes"
     },
     {
-      "trait_type": "Bottom lid",
-      "value": "Low"
-    },
-    {
       "trait_type": "Top lid",
-      "value": "Low"
+      "value": "Middle"
     }
   ]
 }

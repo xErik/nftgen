@@ -19,33 +19,31 @@ class Config {
     int? generateNfts;
     final layerEntries = [];
 
-    layersDir.listSync().forEach((fse) {
-      if (fse is Directory) {
-        final layerName = basename(fse.path);
-        final Map<String, dynamic> configEntry = {};
-        final Map<String, int> weights = {};
+    layersDir.listSync().whereType<Directory>().forEach((fse) {
+      final layerName = basename(fse.path);
+      final Map<String, dynamic> configEntry = {};
+      final Map<String, int> weights = {};
 
-        configEntry.addAll({
-          "name": layerName,
-          "directory": layerName,
-          "probability": 1.0,
-          "weights": weights
-        });
-        layerEntries.add(configEntry);
+      configEntry.addAll({
+        "name": layerName,
+        "directory": layerName,
+        "probability": 1.0,
+        "weights": weights
+      });
+      layerEntries.add(configEntry);
 
-        final entries = Directory(fse.path).listSync();
-        for (var i = 1; i <= entries.length; i++) {
-          final file = entries.elementAt(i - 1);
-          final layerEntity = basename(file.path);
-          final layerWeight = _weight(i, factor);
-          weights.addAll({layerEntity: layerWeight});
-        }
+      final entries = Directory(fse.path).listSync();
+      for (var i = 1; i <= entries.length; i++) {
+        final FileSystemEntity layerFile = entries.elementAt(i - 1);
+        final String layerEntity = basename(layerFile.path);
+        final int layerWeight = _weight(i, factor);
+        weights.addAll({layerEntity: layerWeight});
+      }
 
-        if (generateNfts == null) {
-          generateNfts = entries.length;
-        } else {
-          generateNfts = generateNfts! * entries.length;
-        }
+      if (generateNfts == null) {
+        generateNfts = entries.length;
+      } else {
+        generateNfts = generateNfts! * entries.length;
       }
     });
 
@@ -79,7 +77,7 @@ class Config {
   /// Reads the `cid` code from the config and writes it to all
   /// files in the metadata directory.
   static void updateCidMetadata(File configFile, Directory metaDir,
-      {String cidReplace = "", String cidSearch = ""}) {
+      {required String cidReplace, required String cidSearch}) {
     final config = Io.readJson(configFile);
 
     cidReplace = cidReplace.isEmpty ? config['cidCode'] : cidReplace;

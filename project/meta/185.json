@@ -1,20 +1,28 @@
 {
   "name": "Your NFT #185",
   "description": "",
-  "image": "ipfs://<-- Your CID Code-->/185.png",
-  "dna": "56a4717520f9e184ce2bf6494d45736c",
+  "image": "ipfs://NEW-CID/185.png",
+  "dna": "8710be1f9e3194da6eec2c6153ef907a",
   "attributes": [
     {
       "trait_type": "Background",
       "value": "Black"
     },
     {
-      "trait_type": "Eyeball",
-      "value": "White"
+      "trait_type": "Bottom lid",
+      "value": "Middle"
     },
     {
       "trait_type": "Eye color",
       "value": "Cyan"
+    },
+    {
+      "trait_type": "Eyeball",
+      "value": "White"
+    },
+    {
+      "trait_type": "Goo",
+      "value": "Green"
     },
     {
       "trait_type": "Iris",
@@ -23,10 +31,6 @@
     {
       "trait_type": "Shine",
       "value": "Shapes"
-    },
-    {
-      "trait_type": "Bottom lid",
-      "value": "Low"
     },
     {
       "trait_type": "Top lid",

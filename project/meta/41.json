@@ -1,32 +1,36 @@
 {
   "name": "Your NFT #41",
   "description": "",
-  "image": "ipfs://<-- Your CID Code-->/41.png",
-  "dna": "53c8a26b6e06eb5b8834ae28f4e72edb",
+  "image": "ipfs://NEW-CID/41.png",
+  "dna": "4aae74f012ee54864a1ec1f337414049",
   "attributes": [
     {
       "trait_type": "Background",
       "value": "Black"
     },
     {
+      "trait_type": "Bottom lid",
+      "value": "Low"
+    },
+    {
+      "trait_type": "Eye color",
+      "value": "Pink"
+    },
+    {
       "trait_type": "Eyeball",
       "value": "Red"
     },
     {
-      "trait_type": "Eye color",
-      "value": "Red"
+      "trait_type": "Goo",
+      "value": "Green"
     },
     {
       "trait_type": "Iris",
-      "value": "Small"
+      "value": "Medium"
     },
     {
       "trait_type": "Shine",
       "value": "Shapes"
-    },
-    {
-      "trait_type": "Bottom lid",
-      "value": "Middle"
     },
     {
       "trait_type": "Top lid",

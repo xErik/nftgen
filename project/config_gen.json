@@ -1,7 +1,7 @@
 {
-  "name": "Your NFT name",
+  "name": "Your NFT",
   "generateNfts": 194,
-  "cidCode": "<-- Your CID Code-->",
+  "cidCode": "NEW-CID",
   "layers": [
     {
       "name": "Background",
@@ -12,12 +12,13 @@
       }
     },
     {
-      "name": "Eyeball",
-      "directory": "Eyeball",
+      "name": "Bottom lid",
+      "directory": "Bottom lid",
       "probability": 1.0,
       "weights": {
-        "Red.png": 1,
-        "White.png": 8
+        "High.png": 1,
+        "Low.png": 8,
+        "Middle.png": 27
       }
     },
     {
@@ -31,6 +32,23 @@
         "Purple.png": 64,
         "Red.png": 125,
         "Yellow.png": 216
+      }
+    },
+    {
+      "name": "Eyeball",
+      "directory": "Eyeball",
+      "probability": 1.0,
+      "weights": {
+        "Red.png": 1,
+        "White.png": 8
+      }
+    },
+    {
+      "name": "Goo",
+      "directory": "Goo",
+      "probability": 1.0,
+      "weights": {
+        "Green.png": 1
       }
     },
     {
@@ -49,16 +67,6 @@
       "probability": 1.0,
       "weights": {
         "Shapes.png": 1
-      }
-    },
-    {
-      "name": "Bottom lid",
-      "directory": "Bottom lid",
-      "probability": 1.0,
-      "weights": {
-        "High.png": 1,
-        "Low.png": 8,
-        "Middle.png": 27
       }
     },
     {

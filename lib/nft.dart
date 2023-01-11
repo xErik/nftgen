@@ -24,7 +24,9 @@ class Nft {
     final layers = json['layers'];
     final generateNfts = json['generateNfts'].toInt();
 
-    metaDir.deleteSync(recursive: true);
+    if (metaDir.existsSync()) {
+      metaDir.deleteSync(recursive: true);
+    }
     metaDir.createSync(recursive: true);
 
     final Map<int, Map<String, dynamic>> generated = {};
@@ -88,7 +90,7 @@ class Nft {
   /// Generates NFTs based on a config file, a directory containing
   /// layers in sub-directories, a directory for image output,
   /// based on a directory holding metadata files.
-  static void generateNft(File configFile, Directory layersDir,
+  static Future<void> generateNft(File configFile, Directory layersDir,
       Directory imagesDir, Directory metaDir) async {
     final eta = Eta()..start();
     final sep = Platform.pathSeparator;
@@ -101,7 +103,9 @@ class Nft {
         ig.Image(width: nftSize['width']!, height: nftSize["height"]!);
     final cache = nft.Cache();
 
-    imagesDir.deleteSync(recursive: true);
+    if (imagesDir.existsSync()) {
+      imagesDir.deleteSync(recursive: true);
+    }
     imagesDir.createSync(recursive: true);
 
     for (var nftId = 1; nftId <= confGenerateNfts; nftId++) {

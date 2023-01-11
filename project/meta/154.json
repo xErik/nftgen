@@ -1,36 +1,40 @@
 {
   "name": "Your NFT #154",
   "description": "",
-  "image": "ipfs://<-- Your CID Code-->/154.png",
-  "dna": "3f83fa915b28cdf2514af5ea891ffbd9",
+  "image": "ipfs://NEW-CID/154.png",
+  "dna": "082b31c640fa6ab4b91445a6a0687d4f",
   "attributes": [
     {
       "trait_type": "Background",
       "value": "Black"
     },
     {
-      "trait_type": "Eyeball",
-      "value": "White"
+      "trait_type": "Bottom lid",
+      "value": "Low"
     },
     {
       "trait_type": "Eye color",
-      "value": "Purple"
+      "value": "Red"
+    },
+    {
+      "trait_type": "Eyeball",
+      "value": "Red"
+    },
+    {
+      "trait_type": "Goo",
+      "value": "Green"
     },
     {
       "trait_type": "Iris",
-      "value": "Medium"
+      "value": "Large"
     },
     {
       "trait_type": "Shine",
       "value": "Shapes"
     },
     {
-      "trait_type": "Bottom lid",
-      "value": "Low"
-    },
-    {
       "trait_type": "Top lid",
-      "value": "High"
+      "value": "Low"
     }
   ]
 }

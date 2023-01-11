@@ -1,32 +1,36 @@
 {
   "name": "Your NFT #85",
   "description": "",
-  "image": "ipfs://<-- Your CID Code-->/85.png",
-  "dna": "b378beebd0dfd592d58ee72c6cae1ab5",
+  "image": "ipfs://NEW-CID/85.png",
+  "dna": "17cc4e2e69a4e2c0294a2157fa0a8a6e",
   "attributes": [
     {
       "trait_type": "Background",
       "value": "Black"
     },
     {
+      "trait_type": "Bottom lid",
+      "value": "Low"
+    },
+    {
+      "trait_type": "Eye color",
+      "value": "Red"
+    },
+    {
       "trait_type": "Eyeball",
       "value": "Red"
     },
     {
-      "trait_type": "Eye color",
+      "trait_type": "Goo",
       "value": "Green"
     },
     {
       "trait_type": "Iris",
-      "value": "Large"
+      "value": "Small"
     },
     {
       "trait_type": "Shine",
       "value": "Shapes"
-    },
-    {
-      "trait_type": "Bottom lid",
-      "value": "Middle"
     },
     {
       "trait_type": "Top lid",
