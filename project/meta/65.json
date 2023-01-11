@@ -1,0 +1,36 @@
+{
+  "name": "Your NFT #65",
+  "description": "",
+  "image": "ipfs://<-- Your CID Code-->/65.png",
+  "dna": "0f21b672b6c5b8568903ddc7e54450a4",
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Black"
+    },
+    {
+      "trait_type": "Eyeball",
+      "value": "White"
+    },
+    {
+      "trait_type": "Eye color",
+      "value": "Green"
+    },
+    {
+      "trait_type": "Iris",
+      "value": "Medium"
+    },
+    {
+      "trait_type": "Shine",
+      "value": "Shapes"
+    },
+    {
+      "trait_type": "Bottom lid",
+      "value": "Middle"
+    },
+    {
+      "trait_type": "Top lid",
+      "value": "Middle"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "name": "Your NFT #74",
+  "description": "",
+  "image": "ipfs://<-- Your CID Code-->/74.png",
+  "dna": "401be89043336188db3c8bd80ca85c3c",
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Black"
+    },
+    {
+      "trait_type": "Eyeball",
+      "value": "White"
+    },
+    {
+      "trait_type": "Eye color",
+      "value": "Red"
+    },
+    {
+      "trait_type": "Iris",
+      "value": "Large"
+    },
+    {
+      "trait_type": "Shine",
+      "value": "Shapes"
+    },
+    {
+      "trait_type": "Bottom lid",
+      "value": "Middle"
+    },
+    {
+      "trait_type": "Top lid",
+      "value": "Low"
+    }
+  ]
+}

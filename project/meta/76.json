@@ -1,0 +1,36 @@
+{
+  "name": "Your NFT #76",
+  "description": "",
+  "image": "ipfs://<-- Your CID Code-->/76.png",
+  "dna": "b09c837ef9226ff9c5f14cebf35569b7",
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Black"
+    },
+    {
+      "trait_type": "Eyeball",
+      "value": "White"
+    },
+    {
+      "trait_type": "Eye color",
+      "value": "Yellow"
+    },
+    {
+      "trait_type": "Iris",
+      "value": "Large"
+    },
+    {
+      "trait_type": "Shine",
+      "value": "Shapes"
+    },
+    {
+      "trait_type": "Bottom lid",
+      "value": "Middle"
+    },
+    {
+      "trait_type": "Top lid",
+      "value": "High"
+    }
+  ]
+}

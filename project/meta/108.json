@@ -1,0 +1,36 @@
+{
+  "name": "Your NFT #108",
+  "description": "",
+  "image": "ipfs://<-- Your CID Code-->/108.png",
+  "dna": "2fa118376cd0c6772ed44a3ec51d5e81",
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Black"
+    },
+    {
+      "trait_type": "Eyeball",
+      "value": "White"
+    },
+    {
+      "trait_type": "Eye color",
+      "value": "Purple"
+    },
+    {
+      "trait_type": "Iris",
+      "value": "Small"
+    },
+    {
+      "trait_type": "Shine",
+      "value": "Shapes"
+    },
+    {
+      "trait_type": "Bottom lid",
+      "value": "High"
+    },
+    {
+      "trait_type": "Top lid",
+      "value": "High"
+    }
+  ]
+}

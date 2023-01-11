@@ -1,18 +1,18 @@
 ```dart
 final sep = Platform.pathSeparator;
-final assets = Directory('assets');
+final project = Directory('project');
 
-final layersDir = Directory('${assets.path}${sep}layers');
-final imagesDir = Directory('${assets.path}${sep}images');
-final metaDir = Directory('${assets.path}${sep}meta');
+final layersDir = Directory('${project.path}${sep}layers');
+final imagesDir = Directory('${project.path}${sep}images');
+final metaDir = Directory('${project.path}${sep}meta');
 
-final csvNft = File('${assets.path}${sep}rarity_nft.csv');
-final csvLayers = File('${assets.path}${sep}rarity_layers.csv');
+final csvNft = File('${project.path}${sep}rarity_nft.csv');
+final csvLayers = File('${project.path}${sep}rarity_layers.csv');
 
 // Write config JSON based on layers directory.
 
 final Map<String, dynamic> config = Config.generate(layersDir, factor: 3);
-final configFile = File('${assets.path}${sep}config_generated.json');
+final configFile = File('${project.path}${sep}config_generated.json');
 Io.writeJson(configFile, config);
 
 // Generate NFTs based on config JSON.

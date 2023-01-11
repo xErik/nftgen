@@ -1,0 +1,21 @@
+{
+    "configName": "Your NFT name",
+    "configWeightsFactor": 3.0,
+    "configLayersOrder": [
+        "Background",
+        "Eyeball",
+        "Eye color",
+        "Iris",
+        "Shine",
+        "Bottom lid",
+        "Top lid"
+    ],
+    "configFile": "config_gen.json",
+    "layerDir": "layer",
+    "metaDir": "meta",
+    "imageDir": "image",
+    "rarityNftCsv": "rarity_nft.csv",
+    "raritynftPng": "rarity_nft.png",
+    "rarityLayersCsv": "rarity_layers.csv",
+    "rarityLayersPng": "rarity_layers.png"
+}

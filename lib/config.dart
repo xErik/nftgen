@@ -14,9 +14,9 @@ class Config {
   /// between 1...MAX. The default weight factor is `3.0`, use `0.0` for equal
   /// distribution of all images belonging to a layer with a weight of `1` for
   /// each image in a layer.
-  static Map<String, dynamic> generate(Directory layersDir,
+  static Map<String, dynamic> generate(String name, Directory layersDir,
       {double factor = 3.0, List<String> order = const []}) {
-    int? maxNfts;
+    int? generateNfts;
     final layerEntries = [];
 
     layersDir.listSync().forEach((fse) {
@@ -41,10 +41,10 @@ class Config {
           weights.addAll({layerEntity: layerWeight});
         }
 
-        if (maxNfts == null) {
-          maxNfts = entries.length;
+        if (generateNfts == null) {
+          generateNfts = entries.length;
         } else {
-          maxNfts = maxNfts! * entries.length;
+          generateNfts = generateNfts! * entries.length;
         }
       }
     });
@@ -60,7 +60,8 @@ class Config {
 
     final Map<String, dynamic> config = {};
     config.addAll({
-      "maxNfts": maxNfts!,
+      "name": name,
+      "generateNfts": (generateNfts! * 0.6).toInt(),
       "cidCode": "<-- Your CID Code-->",
       "layers": layerEntries
     });

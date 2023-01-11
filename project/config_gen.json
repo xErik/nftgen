@@ -1,0 +1,75 @@
+{
+  "name": "Your NFT name",
+  "generateNfts": 194,
+  "cidCode": "<-- Your CID Code-->",
+  "layers": [
+    {
+      "name": "Background",
+      "directory": "Background",
+      "probability": 1.0,
+      "weights": {
+        "Black.png": 1
+      }
+    },
+    {
+      "name": "Eyeball",
+      "directory": "Eyeball",
+      "probability": 1.0,
+      "weights": {
+        "Red.png": 1,
+        "White.png": 8
+      }
+    },
+    {
+      "name": "Eye color",
+      "directory": "Eye color",
+      "probability": 1.0,
+      "weights": {
+        "Cyan.png": 1,
+        "Green.png": 8,
+        "Pink.png": 27,
+        "Purple.png": 64,
+        "Red.png": 125,
+        "Yellow.png": 216
+      }
+    },
+    {
+      "name": "Iris",
+      "directory": "Iris",
+      "probability": 1.0,
+      "weights": {
+        "Large.png": 1,
+        "Medium.png": 8,
+        "Small.png": 27
+      }
+    },
+    {
+      "name": "Shine",
+      "directory": "Shine",
+      "probability": 1.0,
+      "weights": {
+        "Shapes.png": 1
+      }
+    },
+    {
+      "name": "Bottom lid",
+      "directory": "Bottom lid",
+      "probability": 1.0,
+      "weights": {
+        "High.png": 1,
+        "Low.png": 8,
+        "Middle.png": 27
+      }
+    },
+    {
+      "name": "Top lid",
+      "directory": "Top lid",
+      "probability": 1.0,
+      "weights": {
+        "High.png": 1,
+        "Low.png": 8,
+        "Middle.png": 27
+      }
+    }
+  ]
+}
