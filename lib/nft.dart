@@ -82,8 +82,7 @@ class Nft {
       var fileMeta = '${metaDir.path}${Platform.pathSeparator}$nftId.json';
       Io.writeJson(File(fileMeta), generated[nftId]!);
 
-      // print('${nftId.toString().padLeft(4, " ")} $fileMeta $nftDna');
-      eta.write(nftId, generateNfts, '$fileMeta $nftDna');
+      eta.write(nftId, generateNfts, '$fileMeta ${nftDna.substring(0, 5)}...');
     }
   }
 

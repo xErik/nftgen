@@ -5,12 +5,12 @@ import 'dart:io';
 class Io {
   static final sep = Platform.pathSeparator;
   static final String projectJson = 'project.json';
-  static final String configJson = 'config_gen.json';
 
   /// Write a JSON file.
   static void writeJson(File json, Map<String, dynamic> config) {
     JsonEncoder encoder = JsonEncoder.withIndent('  ');
     String prettyprint = encoder.convert(config);
+    json.parent.createSync(recursive: true);
     json.writeAsStringSync(prettyprint);
   }
 
@@ -32,6 +32,7 @@ class Io {
       outCsv += '$key, $count\n';
     }
 
+    csvFile.parent.createSync(recursive: true);
     csvFile.writeAsStringSync(outCsv);
   }
 
@@ -61,13 +62,5 @@ class Io {
 
   static File getProject(workDir) {
     return File(workDir.path + sep + projectJson);
-  }
-
-  static bool existsConfig(workDir) {
-    return File(workDir.path + sep + configJson).existsSync();
-  }
-
-  static File getConfig(workDir) {
-    return File(workDir.path + sep + configJson);
   }
 }

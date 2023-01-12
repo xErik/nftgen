@@ -3,30 +3,32 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:nftgen/io.dart';
+import 'package:nftgen/src/shared/streamprint.dart';
 import 'package:path/path.dart';
 
 /// Generates a config file to generate NFTs.
 class Config {
   static final Map<String, dynamic> _project = {
-    "configName": "Your NFT name",
-    "configWeightsFactor": 3.0,
-    "configLayersOrder": [],
-    "configFile": "config_gen.json",
-    "layerDir": "layer",
+    "layerDir": "PATH SET BY USER",
     "metaDir": "meta",
     "imageDir": "image",
+    "rarityDir": "rarity",
     "rarityNftCsv": "rarity_nft.csv",
     "rarityNftPng": "rarity_nft.png",
     "rarityLayersCsv": "rarity_layers.csv",
-    "rarityLayersPng": "rarity_layers.png"
+    "rarityLayersPng": "rarity_layers.png",
+    "name": "NAME SET BY USER",
+    "generateNfts": 0,
+    "cidCode": "<-- Your CID Code-->",
+    "layers": []
   };
 
-  static Map<String, dynamic> generateProject(String name, List<String> order) {
-    final project = jsonDecode(jsonEncode(_project));
-    project["name"] = name;
-    project["order"] = order;
-    return project;
-  }
+  static final Map<String, dynamic> _layerEntry = {
+    "name": 'LAYER-NAME FROM FOLDER',
+    "directory": 'LAYER-DIR FROM FOLDER',
+    "probability": 1.0,
+    "weights": []
+  };
 
   /// Generates a config file to generate NFTs based on a layers directory,
   /// a factor for weight distribution and the order of layers.
@@ -37,28 +39,28 @@ class Config {
   /// distribution of all images belonging to a layer with a weight of `1` for
   /// each image in a layer.
   static Map<String, dynamic> generate(String name, Directory layersDir,
-      {double factor = 3.0, List<String> order = const []}) {
+      {double factorWeights = 3.0, double factorMaxNft = 0.6}) {
     int? generateNfts;
     final layerEntries = [];
 
     layersDir.listSync().whereType<Directory>().forEach((fse) {
       final layerName = basename(fse.path);
-      final Map<String, dynamic> configEntry = {};
+      // final Map<String, dynamic> configEntry = {};
       final Map<String, int> weights = {};
 
-      configEntry.addAll({
-        "name": layerName,
-        "directory": layerName,
-        "probability": 1.0,
-        "weights": weights
-      });
-      layerEntries.add(configEntry);
+      final layerEntry = json.decode(json.encode(_layerEntry));
+      layerEntry["name"] = layerName;
+      layerEntry["directory"] = layerName;
+      layerEntry["probability"] = 1.0;
+      layerEntry["weights"] = weights;
+
+      layerEntries.add(layerEntry);
 
       final entries = Directory(fse.path).listSync();
       for (var i = 1; i <= entries.length; i++) {
         final FileSystemEntity layerFile = entries.elementAt(i - 1);
         final String layerEntity = basename(layerFile.path);
-        final int layerWeight = _weight(i, factor);
+        final int layerWeight = _weight(i, factorWeights);
         weights.addAll({layerEntity: layerWeight});
       }
 
@@ -69,24 +71,13 @@ class Config {
       }
     });
 
-    if (order.isNotEmpty) {
-      final tmp = [];
-      for (var layerName in order) {
-        tmp.add(layerEntries.firstWhere((e) => e["name"] == layerName));
-      }
-      layerEntries.clear();
-      layerEntries.addAll(tmp);
-    }
+    final Map<String, dynamic> project = _project;
+    project["layerDir"] = normalize(layersDir.absolute.path);
+    project["name"] = name;
+    project["generateNfts"] = (generateNfts! * factorMaxNft).toInt();
+    project["layers"] = layerEntries;
 
-    final Map<String, dynamic> config = {};
-    config.addAll({
-      "name": name,
-      "generateNfts": (generateNfts! * 0.6).toInt(),
-      "cidCode": "<-- Your CID Code-->",
-      "layers": layerEntries
-    });
-
-    return config;
+    return project;
   }
 
   static int _weight(int item, double factor) {
@@ -106,11 +97,12 @@ class Config {
     cidSearch = cidSearch.isEmpty ? config['cidCode'] : cidSearch;
 
     if (cidReplace == cidSearch) {
-      print("Aboring, Search equals replace: $cidSearch == $cidReplace ");
+      StreamPrint.prn(
+          "Aboring, Search equals replace: $cidSearch == $cidReplace ");
       return;
     }
 
-    print('REPLACING cid "$cidSearch" with "$cidReplace" ...');
+    StreamPrint.prn('REPLACING cid "$cidSearch" with "$cidReplace" ...');
 
     if (config['cidCode'] != cidReplace) {
       config['cidCode'] = cidReplace;

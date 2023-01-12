@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:nftgen/io.dart';
 
 import 'package:image/image.dart' as ig;
+import 'package:nftgen/src/shared/streamprint.dart';
 
 /// Calculates rarity based on metadata for NFT and
 /// individual layers.
@@ -131,7 +132,7 @@ class Rarity {
     int y0 = 0;
     for (var x = 0; x < entries.length; x++) {
       final y = entries[x].value.round();
-      // print("$x $y");
+
       cmd.drawLine(x1: x0, y1: y0, x2: x, y2: y, color: red);
       x0 = x;
       y0 = y;
@@ -151,7 +152,7 @@ class Rarity {
       wNew = (width * factor).toInt();
     }
 
-    print("CREATE GRAPH: $label, $wNew x $hNew");
+    StreamPrint.prn("CREATE GRAPH: $label, $wNew x $hNew");
 
     cmd
       ..copyResize(width: wNew, height: hNew)

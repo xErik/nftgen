@@ -23,7 +23,7 @@ void main() {
     // Write config JSON based on layers directory
 
     final Map<String, dynamic> config =
-        Config.generate('Your NFT', layerDir, factor: 3);
+        Config.generate('Your NFT', layerDir, factorWeights: 3);
     final configFile = File('${project.path}${sep}config_gen.json');
     Io.writeJson(configFile, config);
 

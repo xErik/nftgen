@@ -2,7 +2,7 @@
 
 NFT unique image generator and metadata analyzer. It can be used as a Dart library or from the command line.
 
-This is work in progress. At the moment, it cannot be used by Flutter Web.
+This is work in progress. At the moment, it cannot be used with Flutter Web.
 
 Generate NFTs follows these procedure:
 
@@ -26,90 +26,53 @@ Which boils down to these commands:
 8. nftgen cid ...
 9. ( ... )
 
-### TODO 
-
-* Automatic setting of weights and probabilities for nice NFT distribution.
-* Implement proper command line invocation.
-* Add proper unit tests
-* ...
-
 ## Quickstart
 
-**Project Structure**
 
-A `project.json` file and the existing layer-directories are required 
-to create a specific config-file organizing the layers and their weights.
+Point to existing directory holding layers and the `nftgen` will create a `project.json` in a project directory of your choice.
 
-A working example is available on Github.
-
-```shell
-// required directory structure and files
-
-./project/project.json
-./project/layer/layer1/fileA.png
-./project/layer/layer2/fileB.png
-  (...)
-```
-
-```json
-// ./project/project.json
-
-{
-    "configName": "Your NFT name",
-    "configWeightsFactor": 3.0,
-    "configLayersOrder": [
-        "Background",
-        "Eyeball",
-        "Eye color",
-        "Iris",
-        "Shine",
-        "Bottom lid",
-        "Top lid"
-    ],
-    "configFile": "config_gen.json",
-    "layerDir": "layer",
-    "metaDir": "meta",
-    "imageDir": "image",
-    "rarityNftCsv": "rarity_nft.csv",
-    "rarityNftPng": "rarity_nft.png",
-    "rarityLayersCsv": "rarity_layers.csv",
-    "rarityLayersPng": "rarity_layers.png"
-}
-```
-**Generate NFTs and metadata**
-
-From outside the `./project/` folder run these commands in sequence:
+The command parameter ` -p ./yourProject/` is optional, if not given the current directory will be used.
 
 ```shell
 dart pub global activate nftgen
 
-nftgen project "NFT Name" "Layer1,Layer2" // generates project.json
-nftgen config   // generates config-file based on project.json and layers
-nftgen meta     // generates metadata for each NFT
-nftgen rarity   // generates rarity CSV  based on metadata
-nftgen nft      // generates images for each NFT based on metadata
-nftgen cid CID  // updates all metadata with new CID
+nftgen init -p ./yourProject/ - n "NFT Name" -l ./yourLayerDir/ 
+nftgen meta -p ./yourProject/    
+nftgen rarity -p ./yourProject/  
+nftgen nft -p ./yourProject/      
+nftgen cid -p ./yourProject/ -c yourCID  
 ```
 
-## Generated config_gen.json
+**nftgen init**
 
-Running `nftgen config` will generate the file `./project/config_gen.json`.
+Running `nftgen init` will generate `./yourProject/project.json`. Open this file, re-order the layers and adjust the layer's weights to your liking:
 
-1. The layer's sequence determines the NFT rendering.
-2. Adjust the weights of individual `layer`s and `weight`s to your needs. 
-3. Update the CID of all metadata files by running `nftgen cid YOUR-CID`. The `cidCode` in `./project/config_gen.json` represents the current CID and is needed for updating the metadata. No need to adjust that manually.
 
 ```JSON
-// config_gen.json
+// project.json
 
 {
+  // IGNORE THIS SECTION BELOW
+
+  "layerDir": "<Path to your layers>",
+  "metaDir": "meta",
+  "imageDir": "image",
+  "rarityDir": "rarity",
+  "rarityNftCsv": "rarity_nft.csv",
+  "rarityNftPng": "rarity_nft.png",
+  "rarityLayersCsv": "rarity_layers.csv",
+  "rarityLayersPng": "rarity_layers.png",
+
+  // IGNORE EVERYTHING ABOVE, EDIT BELOW
+  
+  "name": "Your NFT name",
   // How many NFTs to generate.
   // Defaults to 0.6 * all-combinations-equal-weights 
   // to avoid rendering slowing down when reaching
   // all-combinations-equal-weights number. 
   "generateNfts": 250, 
   // Run "nftgen cid" to update the metadata files.
-  "cidCode": "your CID code", 
+  "cidCode": "current CID code", 
   // The order of layer entries matters.
   "layers": [ 
     {
@@ -137,7 +100,7 @@ Running `nftgen config` will generate the file `./project/config_gen.json`.
 Notes
 
 1. The probability of the rare layers can be set to e.g. `0.05, 0.1, 0.25` etc.
-2. The larger the NFTs collection, the steeper the weights within each layer have to be. This can be achived setting the exponential factors to `2.0, 3.0, 4.0` etc. Possible numeric sequences are:
+2. The larger the NFTs collection, the steeper the weights within each layer have to be. This can be achived setting the exponential factors to `2.0, 3.0, 4.0` etc. Possible numerical sequences are:
 
 ```shell
  x*2 1,4,9,16,...
@@ -196,37 +159,33 @@ Config.updateCidMetadata(configFile, metaDir,
 
 * Deactivate shell command: `dart pub global deactivate nftgen`
 
-Command line invocations accept an optional parameter specifying the project-directory:
+Command line invocations accept an optional parameter specifying the project-directory, without, the current directory will be used:
 
-* Runs in `./project/`: `nftgen config`
+* Runs in current directory: `nftgen config`
 
-* Runs in `./differentFolder/`: `nftgen differentFolder config`
+* Runs in `./differentFolder/`: `nftgen config -p differentFolder`
 
 All commands available:
 
 ```shell
-* Generate a config-json file basd on ./project/project.json:
+>dart pub global activate nftgen
 
-nftgen [<PROJECT-DIR>] config 
+> nftgen.dart help  
+Generate NFTs
 
-* Generate metadata based on ./project/project.json:
+Usage: nftgen <command> [arguments]
 
-nftgen nft [<PROJECT-DIR>] meta 
+Global options:
+-h, --help    Print this usage information.
 
-* Generate NFTs based on ./project/project.json 
-  and ./project/meta/<metadata.json>:
+Available commands:
+  cid      Updates CID of generated metadata
+  init     Initiates a new project
+  meta     Generates NFT metadata
+  nft      Generates NFT images based on metadata
+  rarity   Generates rarity CSV reports
 
-nftgen [<PROJECT-DIR>] nft 
-
-* Add CID code to metadata from ./project/project.json 
-  or command line parameter:
-
-nftgen [<PROJECT-DIR>] cid <CID>
-
-* Generate rarity reports basd on ./project/project.json
-  and ./project/meta/<metadata.json>:
-
-nftgen [<PROJECT-DIR>] rarity 
+Run "nftgen help <command>" for more information about a command.
 ```
 
 ## References

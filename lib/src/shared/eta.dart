@@ -1,3 +1,5 @@
+import 'package:nftgen/src/shared/streamprint.dart';
+
 class Eta {
   DateTime _s0 = DateTime.now();
   void start() => _s0 = DateTime.now();
@@ -16,7 +18,7 @@ class Eta {
     final durationEtaStr =
         durationEta.toString().replaceAll('-', '').split('.')[0];
 
-    print(
-        '> ${index.toString().padLeft(4, " ")} / $max $message SINCE: $durationPastStr ETA: $durationEtaStr');
+    StreamPrint.prn(
+        '${index.toString().padLeft(4, " ")} / $max $message SINCE: $durationPastStr ETA: $durationEtaStr');
   }
 }
