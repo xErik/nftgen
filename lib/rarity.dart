@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:nftgen/io.dart';
 
 import 'package:image/image.dart' as ig;
-import 'package:nftgen/src/shared/streamprint.dart';
+import 'package:nftgen/streamprint.dart';
 
 /// Calculates rarity based on metadata for NFT and
 /// individual layers.

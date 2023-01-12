@@ -3,11 +3,9 @@ import 'dart:io';
 import 'package:args/command_runner.dart';
 import 'package:nftgen/io.dart';
 import 'package:nftgen/rarity.dart';
-import 'package:nftgen/src/shared/streamprint.dart';
+import 'package:nftgen/streamprint.dart';
 
-import 'projectjson.dart';
-
-class RarityCommand extends Command with ProjectJson {
+class RarityCommand extends Command {
   @override
   final name = "rarity";
   @override
@@ -24,7 +22,7 @@ class RarityCommand extends Command with ProjectJson {
   @override
   void run() async {
     Directory projectDir = Directory(argResults!["project"]);
-    final Map<String, dynamic> projectJson = mapJson(projectDir);
+    final Map<String, dynamic> projectJson = Io.mapJson(projectDir);
 
     final File csvNftFile = projectJson["csvNftFile"];
     final File csvLayersFile = projectJson["csvLayersFile"];
@@ -32,7 +30,7 @@ class RarityCommand extends Command with ProjectJson {
     final File pngLayersFile = projectJson["pngLayersFile"];
     final Directory metaDir = projectJson["metaDir"];
 
-    checkFolderExists(metaDir);
+    Io.checkFolderExists(metaDir);
 
     await rarity(csvNftFile, csvLayersFile, pngNftFile, pngLayersFile, metaDir);
   }

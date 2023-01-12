@@ -3,12 +3,9 @@ import 'dart:io';
 import 'package:args/command_runner.dart';
 import 'package:nftgen/config.dart';
 import 'package:nftgen/io.dart';
-import 'package:nftgen/nft.dart';
-import 'package:nftgen/src/shared/streamprint.dart';
+import 'package:nftgen/streamprint.dart';
 
-import 'projectjson.dart';
-
-class CidCommand extends Command with ProjectJson {
+class CidCommand extends Command {
   @override
   final name = "cid";
   @override
@@ -33,13 +30,13 @@ class CidCommand extends Command with ProjectJson {
     Directory projectDir = Directory(argResults!["project"]);
     File projectFile =
         File('${projectDir.path}${Platform.pathSeparator}${Io.projectJson}');
-    final Map<String, dynamic> projectJson = mapJson(projectDir);
+    final Map<String, dynamic> projectJson = Io.mapJson(projectDir);
 
     final Directory metaDir = projectJson["metaDir"];
     final String cidSearch = projectJson["cidSearch"];
     final String cidReplace = argResults!["cid"];
 
-    checkFolderExists(metaDir);
+    Io.checkFolderExists(metaDir);
 
     Config.updateCidMetadata(projectFile, metaDir,
         cidReplace: cidReplace, cidSearch: cidSearch);

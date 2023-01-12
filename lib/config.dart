@@ -3,7 +3,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:nftgen/io.dart';
-import 'package:nftgen/src/shared/streamprint.dart';
+import 'package:nftgen/streamprint.dart';
 import 'package:path/path.dart';
 
 /// Generates a config file to generate NFTs.

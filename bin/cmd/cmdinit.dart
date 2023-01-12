@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:args/command_runner.dart';
 import 'package:nftgen/config.dart';
 import 'package:nftgen/io.dart';
-import 'package:nftgen/src/shared/streamprint.dart';
+import 'package:nftgen/streamprint.dart';
 
 class InitCommand extends Command {
   @override

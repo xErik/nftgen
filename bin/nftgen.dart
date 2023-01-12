@@ -1,12 +1,7 @@
 import 'dart:io';
 
-import 'package:args/args.dart';
 import 'package:args/command_runner.dart';
-import 'package:nftgen/config.dart';
-import 'package:nftgen/nft.dart';
-import 'package:nftgen/rarity.dart';
-import 'package:nftgen/io.dart';
-import 'package:nftgen/src/shared/streamprint.dart';
+import 'package:nftgen/streamprint.dart';
 
 import 'cmd/cmdcid.dart';
 import 'cmd/cmdinit.dart';

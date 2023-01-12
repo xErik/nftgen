@@ -1,4 +1,4 @@
-import 'package:nftgen/src/shared/streamprint.dart';
+import 'package:nftgen/streamprint.dart';
 
 class Eta {
   DateTime _s0 = DateTime.now();
