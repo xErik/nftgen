@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 
-import 'package:nftgen/src/shared/io.dart';
+import 'package:nftgen/io.dart';
 
 import 'package:image/image.dart' as ig;
 

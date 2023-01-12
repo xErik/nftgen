@@ -1,11 +1,33 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
-import 'package:nftgen/src/shared/io.dart';
+import 'package:nftgen/io.dart';
 import 'package:path/path.dart';
 
 /// Generates a config file to generate NFTs.
 class Config {
+  static final Map<String, dynamic> _project = {
+    "configName": "Your NFT name",
+    "configWeightsFactor": 3.0,
+    "configLayersOrder": [],
+    "configFile": "config_gen.json",
+    "layerDir": "layer",
+    "metaDir": "meta",
+    "imageDir": "image",
+    "rarityNftCsv": "rarity_nft.csv",
+    "rarityNftPng": "rarity_nft.png",
+    "rarityLayersCsv": "rarity_layers.csv",
+    "rarityLayersPng": "rarity_layers.png"
+  };
+
+  static Map<String, dynamic> generateProject(String name, List<String> order) {
+    final project = jsonDecode(jsonEncode(_project));
+    project["name"] = name;
+    project["order"] = order;
+    return project;
+  }
+
   /// Generates a config file to generate NFTs based on a layers directory,
   /// a factor for weight distribution and the order of layers.
   ///

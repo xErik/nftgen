@@ -1,5 +1,5 @@
 name: nftgen
-description: NFT unqiue image generator and metadata analyzer, available on library and command line.
+description: NFT unique image generator and metadata analyzer, available on library and command line.
 version: 0.0.3
 homepage: https://github.com/xErik/nftgen
 
@@ -15,4 +15,4 @@ dependencies:
   crypto: ^3.0.2
   image: ^4.0.8
   io: ^1.0.3
-  path: ^1.8.3
+  path: ^1.8.2

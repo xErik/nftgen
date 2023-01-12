@@ -6,7 +6,7 @@ import 'package:nftgen/src/shared/eta.dart';
 import 'src/nft/cache.dart' as nft;
 import 'src/config/cache.dart';
 import 'src/config/dna.dart';
-import 'src/shared/io.dart';
+import 'io.dart';
 
 import 'package:image/image.dart' as ig;
 

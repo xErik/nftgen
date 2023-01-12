@@ -1,6 +1,6 @@
 # nftgen
 
-NFT unqiue image generator and metadata analyzer. It can be used as a Dart library or from the command line.
+NFT unique image generator and metadata analyzer. It can be used as a Dart library or from the command line.
 
 This is work in progress. At the moment, it cannot be used by Flutter Web.
 
@@ -83,6 +83,7 @@ From outside the `./project/` folder run these commands in sequence:
 ```shell
 dart pub global activate nftgen
 
+nftgen project "NFT Name" "Layer1,Layer2" // generates project.json
 nftgen config   // generates config-file based on project.json and layers
 nftgen meta     // generates metadata for each NFT
 nftgen rarity   // generates rarity CSV  based on metadata

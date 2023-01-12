@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:nftgen/config.dart';
 import 'package:nftgen/nft.dart';
 import 'package:nftgen/rarity.dart';
-import 'package:nftgen/src/shared/io.dart';
+import 'package:nftgen/io.dart';
 
 /// General command template:
 /// nftgen <PROJECT-DIR> <COMMAND> [PARAMETERS]
@@ -40,18 +40,22 @@ void main(List<String> args) async {
   // PROJECT FILE
   // ------------------------------------------------------------
 
+  File projectFile = File('project/project.json');
+
   if (args.length >= 2 && Directory(args[1]).existsSync()) {
     projectDir = Directory(args[1]);
     if (projectDir.existsSync()) {
       indexShift = 1;
-      project = Io.readJson(File("${projectDir.path}${sep}project.json"));
+      projectFile = File("${projectDir.path}${sep}project.json");
+      project = Io.readJson(projectFile);
       print('Project directory defined, using: ${projectDir.path}');
     }
   }
 
   if (projectDir == null) {
     projectDir = Directory("project");
-    project = Io.readJson(File("${projectDir.path}${sep}project.json"));
+    projectFile = File("${projectDir.path}${sep}project.json");
+    project = Io.readJson(projectFile);
     print('Project directory not defined, using: ${projectDir.path}');
   }
 
@@ -86,6 +90,18 @@ void main(List<String> args) async {
   // ------------------------------------------------------------
 
   switch (command) {
+    case "project":
+      print(args);
+      final name = args[1 + indexShift];
+      final order = List<String>.from(args[2 + indexShift].split(','));
+      if (order.isEmpty) {
+        print("Exiting, order of layers is empty.");
+        return;
+      }
+      final projectNew = Config.generateProject(name, order);
+      Io.writeJson(projectFile, projectNew);
+      print("Created: ${projectFile.path}");
+      break;
     case "config":
       final configNew =
           Config.generate(name, layerDir, factor: factor, order: order);
@@ -136,6 +152,9 @@ void usage() {
   // ---------------------------------------------------
 
   print('USAGE\n');
+
+  print('* Generate a project file:\n');
+  print("  nftgen project [<PROJECT-DIR>] <PROJECT-NAME> <LAYER-ORDER>");
 
   print('* Generate a config-json file basd on ./project/project.json:\n');
   print("  nftgen config [<PROJECT-DIR>]");

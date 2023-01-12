@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:nftgen/config.dart';
 import 'package:nftgen/rarity.dart';
-import 'package:nftgen/src/shared/io.dart';
+import 'package:nftgen/io.dart';
 import 'package:nftgen/nft.dart';
 import 'package:test/test.dart';
 
