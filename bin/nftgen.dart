@@ -6,9 +6,9 @@ import 'package:nftgen/cli.dart' as m;
 ///
 /// Add --no-kill and method will throw `NftCliException`
 /// instead of calling exit(64).
-void main(List<String> args) {
+Future<dynamic> main(List<String> args) async {
   try {
-    m.main(args);
+    await m.main(args);
   } catch (error) {
     StreamPrint.prn(error.toString());
   }

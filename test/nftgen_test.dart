@@ -7,21 +7,16 @@ import 'package:nftgen/cli.dart' as cli;
 import 'package:test/test.dart';
 
 void main() {
-  test('generateConfigAndNftFromLayers', () {
+  test('generateConfigAndNftFromLayers', () async {
     final sep = Platform.pathSeparator;
     final String projectDir = 'project';
     final String layerDir = '$projectDir${sep}layer';
     final String name = "NFT Test name";
 
-    cli.init(projectDir, layerDir, name, true);
-
-    cli.meta(projectDir);
-
-    cli.rarity(projectDir);
-
-    cli.cid(projectDir, "NEW-CID");
-
-    // IMAGE does work from within tests?
-    // cli.nft(projectDir);
+    await cli.init(projectDir, layerDir, name, true);
+    await cli.meta(projectDir);
+    await cli.rarity(projectDir);
+    await cli.cid(projectDir, "NEW-CID");
+    await cli.nft(projectDir);
   });
 }
