@@ -98,6 +98,12 @@ class ProjectModel {
 
     Map<String, dynamic> projectJson = Io.readJson(projectFile);
 
+    return fromJson(projectJson, projectDir);
+  }
+
+  /// throws NftCliException if false.
+  static ProjectModel fromJson(
+      Map<String, dynamic> projectJson, Directory projectDir) {
     final List<Map<String, dynamic>> layersJson =
         List<Map<String, dynamic>>.from(projectJson['layers']);
 
@@ -142,7 +148,7 @@ class ProjectModel {
 
   void saveToFolder(Directory projectDir) {
     final projectFile = Io.getProject(projectDir);
-    Io.writeJson(projectFile, _toJson());
+    Io.writeJson(projectFile, toJson());
   }
 
   /// Returns empty model.
@@ -164,7 +170,7 @@ class ProjectModel {
   }
 
   // Returns map of model representing JSON.
-  Map<String, dynamic> _toJson() {
+  Map<String, dynamic> toJson() {
     final layersJson = [];
     for (var layer in layers) {
       layersJson.add(layer.toJson());

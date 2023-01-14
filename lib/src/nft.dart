@@ -142,7 +142,6 @@ class Nft {
 
       eta.write(nftId, confGenerateNfts, fileImage);
     }
-    print('INSIDE EXIT');
   }
 
   /// Returns the width and height of the first image found in `layersDir`:

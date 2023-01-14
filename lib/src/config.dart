@@ -66,7 +66,7 @@ class Config {
     // final config = Io.readJson(configFile);
 
     final ProjectModel model = ProjectModel.loadFromFolder(projectDir);
-    final File configFile = Io.getProject(projectDir);
+    // final File configFile = Io.getProject(projectDir);
     final Directory metaDir = model.metaDir;
 
     cidReplace = cidReplace.isEmpty ? model.cidCode : cidReplace;

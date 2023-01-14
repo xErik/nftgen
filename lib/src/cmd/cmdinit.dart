@@ -56,9 +56,10 @@ class InitCommand extends Command {
     if (isOverwrite == false) {
       try {
         Io.asserExistsNotFile(projectFile);
+      } on NftCliException catch (e) {
+        throw NftCliException("${e.message}, use -o to overwrite.");
       } catch (e) {
-        throw NftCliException(
-            "File does exist: ${projectFile.path}, use -o to overwrite.");
+        throw NftCliException(e.toString());
       }
     }
 

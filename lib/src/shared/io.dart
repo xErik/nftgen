@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:nftgen/public/nftcliexception.dart';
-import 'package:nftgen/public/projectmodel.dart';
 import 'package:nftgen/public/streamprint.dart';
 import 'package:path/path.dart';
 
@@ -97,14 +96,14 @@ class Io {
   /// throws NftCliException if true.
   static void asserExistsNotFile(File projectFile) {
     if (projectFile.existsSync() == true) {
-      throw NftCliException("File does exist: ${projectFile.path} ");
+      throw NftCliException("File does exist: ${projectFile.path}");
     }
   }
 
   /// throws NftCliException if false.
   static void assertExistsFolder(Directory metaDir) {
     if (metaDir.existsSync() == false) {
-      throw NftCliException("Folder does not exist: ${metaDir.path} ");
+      throw NftCliException("Folder does not exist: ${metaDir.path}");
     }
   }
 

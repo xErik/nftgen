@@ -40,6 +40,6 @@ class NftCommand extends Command {
     await Nft.generateNft(
         projectDir, model.layerDir, model.imageDir, model.metaDir);
 
-    StreamPrint.prn("Created: ${projectFile.path}");
+    StreamPrint.prn("Created: ${model.imageDir.path}${Io.sep}*.png");
   }
 }
