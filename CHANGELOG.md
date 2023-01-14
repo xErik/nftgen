@@ -13,3 +13,7 @@
 ## 0.0.3
 
 - Added project.json and simplified command line invocation.
+
+## 0.0.4
+
+- Proper JSON parsing, CLI args parsing, preparation for streaming messages to UI.

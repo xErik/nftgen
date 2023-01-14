@@ -1,9 +1,10 @@
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
-import 'package:nftgen/io.dart';
-import 'package:nftgen/rarity.dart';
-import 'package:nftgen/streamprint.dart';
+import 'package:nftgen/src/shared/io.dart';
+import 'package:nftgen/src/rarity.dart';
+import 'package:nftgen/public/projectmodel.dart';
+import 'package:nftgen/public/streamprint.dart';
 
 class RarityCommand extends Command {
   @override
@@ -12,27 +13,31 @@ class RarityCommand extends Command {
   final description = "Generates rarity CSV reports";
 
   RarityCommand() {
-    argParser.addOption('project',
-        abbr: "p",
-        help: 'The project path',
-        valueHelp: 'path',
-        defaultsTo: Directory.current.absolute.path);
+    argParser
+      ..addOption('project',
+          abbr: "p",
+          help: 'The project path',
+          valueHelp: 'path',
+          defaultsTo: Directory.current.absolute.path)
+      ..addFlag("kill",
+          abbr: "k",
+          defaultsTo: true,
+          help: 'exit(64) process in case of error?');
   }
 
   @override
   void run() async {
     Directory projectDir = Directory(argResults!["project"]);
-    final Map<String, dynamic> projectJson = Io.mapJson(projectDir);
+    final ProjectModel projectJson = ProjectModel.loadFromFolder(projectDir);
 
-    final File csvNftFile = projectJson["csvNftFile"];
-    final File csvLayersFile = projectJson["csvLayersFile"];
-    final File pngNftFile = projectJson["pngNftFile"];
-    final File pngLayersFile = projectJson["pngLayersFile"];
-    final Directory metaDir = projectJson["metaDir"];
+    Io.assertExistsFolder(projectJson.metaDir);
 
-    Io.checkFolderExists(metaDir);
-
-    await rarity(csvNftFile, csvLayersFile, pngNftFile, pngLayersFile, metaDir);
+    await rarity(
+        projectJson.rarityNftCsv,
+        projectJson.rarityLayersCsv,
+        projectJson.rarityNftPng,
+        projectJson.rarityLayersPng,
+        projectJson.metaDir);
   }
 
   Future<void> rarity(File csvNftFile, File csvLayersFile, File pngNftFile,

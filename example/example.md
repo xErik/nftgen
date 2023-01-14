@@ -11,10 +11,10 @@ final csvLayers = File('${project.path}${sep}rarity_layers.csv');
 
 // Write config JSON based on layers directory
 
-final Map<String, dynamic> config =
-    Config.generate('Your NFT', layerDir, factor: 3);
+final ProjectModel model =
+    Config.generate('Your NFT', layerDir, factorWeights: 3);
 final configFile = File('${project.path}${sep}config_gen.json');
-Io.writeJson(configFile, config);
+Io.writeJson(configFile, model.toJson());
 
 // Generate metadata based on config JSON
 

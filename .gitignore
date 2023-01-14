@@ -5,4 +5,7 @@
 # Conventional directory for build output.
 build/
 project/image/
+project/meta/
+project/rarity/
+project/project.json
 bla/

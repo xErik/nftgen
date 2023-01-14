@@ -1,12 +1,13 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:nftgen/public/projectmodel.dart';
 import 'package:nftgen/src/shared/eta.dart';
 
-import 'src/nft/cache.dart' as nft;
-import 'src/config/cache.dart';
-import 'src/config/dna.dart';
-import 'io.dart';
+import 'nft/cache.dart' as nft;
+import 'config/cache.dart';
+import 'config/dna.dart';
+import 'shared/io.dart';
 
 import 'package:image/image.dart' as ig;
 
@@ -73,7 +74,7 @@ class Nft {
         nftId: {
           "name": "$name #$nftId",
           "description": "",
-          "image": "ipfs://<-- Your CID Code-->/$nftId.png",
+          "image": "ipfs://${ProjectModel.cidDefaultCode}/$nftId.png",
           "dna": nftDna,
           "attributes": attributes
         }
@@ -89,13 +90,14 @@ class Nft {
   /// Generates NFTs based on a config file, a directory containing
   /// layers in sub-directories, a directory for image output,
   /// based on a directory holding metadata files.
-  static Future<void> generateNft(File configFile, Directory layersDir,
+  static Future<void> generateNft(Directory projectDir, Directory layersDir,
       Directory imagesDir, Directory metaDir) async {
     final eta = Eta()..start();
     final sep = Platform.pathSeparator;
-    final confJson = Io.readJson(configFile);
-    final confLayers = confJson['layers'];
-    final confGenerateNfts = confJson['generateNfts'].toInt();
+    final ProjectModel model = ProjectModel.loadFromFolder(projectDir);
+    final confLayers = model.layers;
+    final confGenerateNfts = model.generateNfts;
+
     final nftSize = await getImageSize(layersDir);
     final List<File> imageFiles = [];
     final canvas =
@@ -115,8 +117,8 @@ class Nft {
           Io.readJson(File('${metaDir.path + sep + nftId.toString()}.json'));
 
       for (var attribute in metaJson['attributes']) {
-        final nftType = attribute['trait_type'];
-        final nftValue = attribute['value'];
+        final String nftType = attribute['trait_type'];
+        final String nftValue = attribute['value'];
 
         imageFiles
             .add(cache.getFile(nftType, nftValue, layersDir.path, confLayers));
@@ -140,14 +142,16 @@ class Nft {
 
       eta.write(nftId, confGenerateNfts, fileImage);
     }
+    print('INSIDE EXIT');
   }
 
   /// Returns the width and height of the first image found in `layersDir`:
   /// `{"width": <WIDTH>, "height": <HEIGHT>}`
   static Future<Map<String, int>> getImageSize(Directory layersDir) async {
     final path = Directory(layersDir.listSync()[0].path).listSync()[0].path;
-
-    final forSize = await ig.decodePngFile(path);
-    return {"width": forSize!.width, "height": forSize.height};
+    final image = await ig.decodePngFile(path);
+    // print('SIZE: ' + image.toString());
+    return {"width": image!.width, "height": image.height};
+    // return {"width": 512, "height": 512};
   }
 }

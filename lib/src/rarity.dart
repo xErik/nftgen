@@ -1,10 +1,10 @@
 import 'dart:io';
 import 'dart:math';
 
-import 'package:nftgen/io.dart';
+import 'package:nftgen/src/shared/io.dart';
 
 import 'package:image/image.dart' as ig;
-import 'package:nftgen/streamprint.dart';
+import 'package:nftgen/public/streamprint.dart';
 
 /// Calculates rarity based on metadata for NFT and
 /// individual layers.
@@ -17,11 +17,11 @@ class Rarity {
   static List<MapEntry<String, double>> layers(Directory metaDir) {
     final Map<String, int> attributeCountAbsolute = {};
     final Map<String, double> attributeCountPercentage = {};
-    final metas = Io.getJsonFiles(metaDir);
+    final metasFiles = Io.getJsonFiles(metaDir);
 
-    for (var meta in metas) {
-      final js = Io.readJson(File(meta.path));
-      final List<dynamic> atts = js['attributes'];
+    for (var meta in metasFiles) {
+      final metaJson = Io.readJson(File(meta.path));
+      final List<dynamic> atts = metaJson['attributes'];
 
       for (var att in atts) {
         final key = att['trait_type'];
@@ -37,8 +37,8 @@ class Rarity {
 
     for (var entry in attributeCountAbsolute.entries) {
       attributeCountPercentage.putIfAbsent(entry.key, () => 0);
-      attributeCountPercentage[entry.key] =
-          double.parse(((100 / metas.length) * entry.value).toStringAsFixed(4));
+      attributeCountPercentage[entry.key] = double.parse(
+          ((100 / metasFiles.length) * entry.value).toStringAsFixed(4));
     }
 
     final sortedEntries = attributeCountPercentage.entries.toList()

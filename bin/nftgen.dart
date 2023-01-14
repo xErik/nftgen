@@ -1,27 +1,15 @@
-import 'dart:io';
-
-import 'package:args/command_runner.dart';
-import 'package:nftgen/streamprint.dart';
-
-import 'cmd/cmdcid.dart';
-import 'cmd/cmdinit.dart';
-import 'cmd/cmdmeta.dart';
-import 'cmd/cmdnft.dart';
-import 'cmd/cmdrarity.dart';
+import 'package:nftgen/public/streamprint.dart';
+import 'package:nftgen/cli.dart' as m;
 
 /// General command template:
 /// nftgen <COMMAND> [<PROJECT-DIR>] <PARAMETERS>
+///
+/// Add --no-kill and method will throw `NftCliException`
+/// instead of calling exit(64).
 void main(List<String> args) {
-  CommandRunner("nftgen", "Generate NFTs")
-    ..addCommand(InitCommand())
-    ..addCommand(MetaCommand())
-    ..addCommand(RarityCommand())
-    ..addCommand(CidCommand())
-    ..addCommand(NftCommand())
-    // ..addCommand(HelpCommand())
-    ..run(args).catchError((error) {
-      if (error is! UsageException) throw error;
-      StreamPrint.prn(error.toString());
-      exit(64); // Exit code 64 indicates a usage error.
-    });
+  try {
+    m.main(args);
+  } catch (error) {
+    StreamPrint.prn(error.toString());
+  }
 }

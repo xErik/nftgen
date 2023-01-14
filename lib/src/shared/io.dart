@@ -1,7 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:nftgen/streamprint.dart';
+import 'package:nftgen/public/nftcliexception.dart';
+import 'package:nftgen/public/projectmodel.dart';
+import 'package:nftgen/public/streamprint.dart';
+import 'package:path/path.dart';
 
 /// Io helper class.
 class Io {
@@ -71,63 +74,44 @@ class Io {
     return File(workDir.path + sep + projectJson).existsSync();
   }
 
-  static File getProject(workDir) {
-    return File(workDir.path + sep + projectJson);
+  static File getProject(Directory workDir) {
+    return File(normalize(File(workDir.path + sep + projectJson).path));
   }
 
   // -----------------------------------------------------------------
 
-  static Map<String, dynamic> mapJson(Directory projectDir) {
-    File projectFile =
-        File('${projectDir.path}${Platform.pathSeparator}${Io.projectJson}');
-
-    checkProjectFileExit(projectFile);
-
-    Map<String, dynamic> projectJson = Io.readJson(projectFile);
-
-    return {
-      "name": projectJson['name'],
-      // "factor": projectJson['weightsFactor'],
-      "cidSearch": projectJson["cidCode"],
-      "metaDir": Directory(projectDir.path + Io.sep + projectJson['metaDir']),
-      "layerDir": Directory(projectJson['layerDir']), // NOT ON PROJECT!
-      "imageDir": Directory(projectDir.path + Io.sep + projectJson['imageDir']),
-      "rarityDir":
-          Directory(projectDir.path + Io.sep + projectJson['rarityDir']),
-      "csvNftFile": File(projectDir.path +
-          Io.sep +
-          projectJson['rarityDir'] +
-          Io.sep +
-          projectJson["rarityNftCsv"]),
-      "csvLayersFile": File(projectDir.path +
-          Io.sep +
-          projectJson['rarityDir'] +
-          Io.sep +
-          projectJson["rarityLayersCsv"]),
-      "pngNftFile": File(projectDir.path +
-          Io.sep +
-          projectJson['rarityDir'] +
-          Io.sep +
-          projectJson["rarityNftPng"]),
-      "pngLayersFile": File(projectDir.path +
-          Io.sep +
-          projectJson['rarityDir'] +
-          Io.sep +
-          projectJson["rarityLayersPng"]),
-    };
+  // throws NftCliException if false.
+  static bool checkProjectFolderExits(Directory projectDir) {
+    final projectFile = getProject(projectDir);
+    return projectFile.existsSync();
   }
 
-  static void checkProjectFileExit(File projectFile) {
+  /// throws NftCliException if false.
+  static void assertExistsFile(File projectFile) {
+    // print("projectFile.existsSync() ${projectFile.existsSync()}");
     if (projectFile.existsSync() == false) {
-      StreamPrint.prn("Exiting, file does not exist: ${projectFile.path} ");
-      exit(64);
+      throw NftCliException("File does not exist: ${projectFile.path} ");
     }
   }
 
-  static void checkFolderExists(Directory metaDir) {
+  /// throws NftCliException if true.
+  static void asserExistsNotFile(File projectFile) {
+    if (projectFile.existsSync() == true) {
+      throw NftCliException("File does exist: ${projectFile.path} ");
+    }
+  }
+
+  /// throws NftCliException if false.
+  static void assertExistsFolder(Directory metaDir) {
     if (metaDir.existsSync() == false) {
-      StreamPrint.prn("Exiting, folder does not exist: ${metaDir.path} ");
-      exit(64);
+      throw NftCliException("Folder does not exist: ${metaDir.path} ");
+    }
+  }
+
+  /// throws NftCliException if true.
+  static void assertExistsNotFolder(Directory metaDir) {
+    if (metaDir.existsSync() == true) {
+      throw NftCliException("Folder does exist: ${metaDir.path} ");
     }
   }
 }

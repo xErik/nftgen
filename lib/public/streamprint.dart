@@ -6,6 +6,17 @@ class PrintContent {
   Type type;
   String str;
   PrintContent(this.str, [this.type = Type.ok]);
+
+  @override
+  String toString() {
+    final prefix = type == Type.ok
+        ? "✅"
+        : type == Type.warn
+            ? "⚠ WARNING"
+            : "❌ ERROR";
+
+    return "$prefix $str";
+  }
 }
 
 class StreamPrint {
@@ -21,7 +32,6 @@ class StreamPrint {
 
   static void err(String str) {
     _controller.add(PrintContent(str, Type.error));
-    print(str);
   }
 
   static void warn(String str) {
