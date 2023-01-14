@@ -1,6 +1,9 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:nftgen/public/stoptype.dart';
+import 'package:nftgen/src/shared/stopper.dart';
+import 'package:nftgen/src/shared/eta.dart';
 import 'package:nftgen/src/shared/io.dart';
 
 import 'package:image/image.dart' as ig;
@@ -20,6 +23,7 @@ class Rarity {
     final metasFiles = Io.getJsonFiles(metaDir);
 
     for (var meta in metasFiles) {
+      Stopper.assertNotStopped(StopCommand.rarity);
       final metaJson = Io.readJson(File(meta.path));
       final List<dynamic> atts = metaJson['attributes'];
 
@@ -57,11 +61,15 @@ class Rarity {
   /// [Rarity Score for a Trait Value] = 1 / ([Number of Items with that Trait Value] / [Total Number of Items in Collection])
   /// The total Rarity Score for an NFT is the sum of the Rarity Score of all of it’s trait values.
   static List<MapEntry<String, double>> nfts(Directory metaDir) {
+    final eta = Eta()..start();
     final Map<String, int> attributeCountAbsolute = {};
     final Map<String, double> attributeCountPercentage = {};
     final metas = Io.getJsonFiles(metaDir);
 
-    for (var meta in metas) {
+    for (var i = 0; i < metas.length; i++) {
+      Stopper.assertNotStopped(StopCommand.rarity);
+
+      final meta = metas.elementAt(i);
       final js = Io.readJson(File(meta.path));
       final List<dynamic> atts = js['attributes'];
 
@@ -75,6 +83,7 @@ class Rarity {
         attributeCountAbsolute.putIfAbsent(keyVal, () => 0);
         attributeCountAbsolute[keyVal] = attributeCountAbsolute[keyVal]! + 1;
       }
+      eta.write(i + 1, metas.length * 2, '');
     }
 
     for (var entry in attributeCountAbsolute.entries) {
@@ -84,7 +93,10 @@ class Rarity {
 
     final Map<String, double> items = {};
 
-    for (var meta in metas) {
+    for (var i = 0; i < metas.length; i++) {
+      Stopper.assertNotStopped(StopCommand.rarity);
+
+      final meta = metas.elementAt(i);
       final js = Io.readJson(File(meta.path));
       final List<dynamic> atts = js['attributes'];
 
@@ -106,6 +118,8 @@ class Rarity {
       }
 
       items[meta.path] = rarity;
+
+      eta.write(i + 1, metas.length * 2, '');
     }
 
     final sortedEntries = items.entries.toList()

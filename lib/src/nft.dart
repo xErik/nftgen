@@ -1,7 +1,10 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
 import 'package:nftgen/public/projectmodel.dart';
+import 'package:nftgen/public/stoptype.dart';
+import 'package:nftgen/src/shared/stopper.dart';
 import 'package:nftgen/src/shared/eta.dart';
 
 import 'nft/cache.dart' as nft;
@@ -33,6 +36,7 @@ class Nft {
     final Map<int, Map<String, dynamic>> generated = {};
 
     for (var nftId = 1; nftId <= generateNfts; nftId++) {
+      Stopper.assertNotStopped(StopCommand.meta);
       String nftDna = '';
       final List<Map<String, String>> attributes = [];
 
@@ -110,6 +114,8 @@ class Nft {
     imagesDir.createSync(recursive: true);
 
     for (var nftId = 1; nftId <= confGenerateNfts; nftId++) {
+      Stopper.assertNotStopped(StopCommand.nft);
+
       imageFiles.clear();
       canvas.clear();
 
@@ -129,6 +135,7 @@ class Nft {
       // -----------------------------------------------------
 
       for (var imageFile in imageFiles) {
+        Stopper.assertNotStopped(StopCommand.nft);
         final bytes = await ig.decodeImageFile(imageFile.path);
         ig.compositeImage(canvas, bytes!);
       }
@@ -149,8 +156,6 @@ class Nft {
   static Future<Map<String, int>> getImageSize(Directory layersDir) async {
     final path = Directory(layersDir.listSync()[0].path).listSync()[0].path;
     final image = await ig.decodePngFile(path);
-    // print('SIZE: ' + image.toString());
     return {"width": image!.width, "height": image.height};
-    // return {"width": 512, "height": 512};
   }
 }

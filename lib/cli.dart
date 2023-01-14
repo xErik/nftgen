@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
+import 'package:nftgen/public/stoptype.dart';
+import 'package:nftgen/src/shared/stopper.dart';
 
 import 'src/cmd/cmdcid.dart';
 import 'src/cmd/cmdinit.dart';
@@ -31,6 +33,8 @@ Future<dynamic> cid(String projectDir, String cid) async =>
 /// Runs NFT image generation based on metadata
 Future<dynamic> nft(String projectDir) async =>
     await main(["nft", "-p", projectDir, "--no-kill"]);
+
+void stop(StopCommand command) => Stopper.stop(command);
 
 /// General command template:
 /// nftgen <COMMAND> [<PROJECT-DIR>] <PARAMETERS>

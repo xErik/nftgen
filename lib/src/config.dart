@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:nftgen/public/stoptype.dart';
+import 'package:nftgen/src/shared/stopper.dart';
 import 'package:nftgen/src/shared/io.dart';
 import 'package:nftgen/public/projectmodel.dart';
 import 'package:nftgen/public/streamprint.dart';
@@ -74,7 +76,7 @@ class Config {
 
     if (cidReplace == cidSearch) {
       StreamPrint.prn(
-          "Aboring, search equals replace: $cidSearch == $cidReplace ");
+          "Aborting, search equals replace: $cidSearch == $cidReplace ");
       return;
     }
 
@@ -88,6 +90,7 @@ class Config {
     final entries = metaDir.listSync();
 
     for (var entry in entries) {
+      Stopper.assertNotStopped(StopCommand.cid);
       final file = File(entry.path);
       final json = Io.readJson(file);
       json['image'] =

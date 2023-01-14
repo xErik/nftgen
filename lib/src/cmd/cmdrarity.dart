@@ -19,6 +19,10 @@ class RarityCommand extends Command {
           help: 'The project path',
           valueHelp: 'path',
           defaultsTo: Directory.current.absolute.path)
+      ..addFlag("charts",
+          abbr: "c",
+          defaultsTo: false,
+          help: 'draw and save small image charts?')
       ..addFlag("kill",
           abbr: "k",
           defaultsTo: true,
@@ -28,32 +32,28 @@ class RarityCommand extends Command {
   @override
   void run() async {
     Directory projectDir = Directory(argResults!["project"]);
+    final bool doCharts = argResults!["charts"];
     final ProjectModel projectJson = ProjectModel.loadFromFolder(projectDir);
 
     Io.assertExistsFolder(projectJson.metaDir);
 
-    await rarity(
-        projectJson.rarityNftCsv,
-        projectJson.rarityLayersCsv,
-        projectJson.rarityNftPng,
-        projectJson.rarityLayersPng,
-        projectJson.metaDir);
-  }
+    List<MapEntry<String, double>> sortedNft = Rarity.nfts(projectJson.metaDir);
+    List<MapEntry<String, double>> sortedAttr =
+        Rarity.layers(projectJson.metaDir);
 
-  Future<void> rarity(File csvNftFile, File csvLayersFile, File pngNftFile,
-      File pngLayersFile, Directory metaDir) async {
-    List<MapEntry<String, double>> sortedNft = Rarity.nfts(metaDir);
-    List<MapEntry<String, double>> sortedAttr = Rarity.layers(metaDir);
+    if (doCharts) {
+      await Rarity.drawChart(
+          projectJson.rarityNftPng.path, sortedNft, 'NFTs: high = high rarity');
+      await Rarity.drawChart(projectJson.rarityLayersPng.path, sortedAttr,
+          'Attributes: low = high rarity');
+    }
 
-    await Rarity.drawChart(
-        pngNftFile.path, sortedNft, 'NFTs: high = high rarity');
-    await Rarity.drawChart(
-        pngLayersFile.path, sortedAttr, 'Attributes: low = high rarity');
+    Io.writeCsv(sortedNft, projectJson.rarityNftCsv);
+    Io.writeCsv(sortedAttr, projectJson.rarityLayersCsv);
 
-    Io.writeCsv(sortedNft, csvNftFile);
-    Io.writeCsv(sortedAttr, csvLayersFile);
-
-    StreamPrint.prn('Rarity NFTs: ${csvNftFile.path} (large = rare)');
-    StreamPrint.prn('Rarity Layers: ${csvLayersFile.path} (small = rare)');
+    StreamPrint.prn(
+        'Rarity NFTs: ${projectJson.rarityNftCsv.path} (large = rare)');
+    StreamPrint.prn(
+        'Rarity Layers: ${projectJson.rarityLayersCsv.path} (small = rare)');
   }
 }
