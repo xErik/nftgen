@@ -1,11 +1,12 @@
 # nftgen
 
-NFT unique image generator and metadata analyzer. It can be used as a Dart library or from the command line.
+NFT unique image generator and metadata analyzer. Package and CLI enabled.
 
-This package is work in progress. At the moment, it cannot be used with Flutter Web as 
-browser cannot write to the local file system and thus exporting NFTs is not possible.
+**nftgen EXE**
 
-Generating NFTs follows this procedure:
+A [ready-to-use command line EXE](https://github.com/xErik/nftgen/releases) is available. Always do a security check when downloading executables.
+
+**General NFT Procedure** 
 
 1. Generate project-file based on layers directory
 2. **Manually**: Adjust probabilities in project-file  
@@ -45,7 +46,7 @@ Regarding all commands: The OPTIONAL parameter ` -p ./project/` specifies the pr
 
 ### project.json
 
-Open `project.json`, re-order the layers and adjust their weights to your liking:
+Open `project.json`, re-order the layers, and adjust their weights to your liking:
 
 ```JSON
 // project.json
@@ -97,7 +98,7 @@ Open `project.json`, re-order the layers and adjust their weights to your liking
 }
 ```
 
-**Probability**
+**Probability and Weights**
 
 1. Change the steepness of a layer's `weights` sequence with the `-w` parameter: `nftgen init -p ./project/ -w 3.0`. The larger the NFT collection, the steeper the weights within each layer have to be. Set `-w` to `3.0, 4.0, 5.0, ...`. 
 
@@ -107,19 +108,21 @@ Open `project.json`, re-order the layers and adjust their weights to your liking
 
 ### Library
 
-Please refer to the API for details, some functions have additonal parameters.
-
 ```dart
-final sep = Platform.pathSeparator;
-final String projectDir = 'project';
-final String layerDir = '$projectDir${sep}layer';
-final String name = "NFT Test name";
+try {
+    final sep = Platform.pathSeparator;
+    final String projectDir = 'project';
+    final String layerDir = '$projectDir${sep}layer';
+    final String name = "NFT Test name";
 
-await cli.init(projectDir, layerDir, name, true);
-await cli.meta(projectDir);
-await cli.rarity(projectDir);
-await cli.cid(projectDir, "NEW-CID");
-await cli.nft(projectDir);
+    await cli.init(projectDir, layerDir, name, true);
+    await cli.meta(projectDir);
+    await cli.rarity(projectDir);
+    await cli.cid(projectDir, "NEW-CID");
+    await cli.nft(projectDir);
+} on NftCliException catch (e) {
+    print(e.message);
+}
 ```
 
 ### Command Line
@@ -131,8 +134,7 @@ dart pub global activate nftgen
 dart pub global deactivate nftgen
 ```
 
-Commands accept an OPTIONAL parameter specifying the project-directory. 
-Without it, the current directory will be used.
+Commands accept an OPTIONAL parameter specifying the project-directory. Otherwise, the current directory will be used.
 
 Try `nftgen.dart help` and `nftgen.dart help <COMMAND>` for further information.
 
@@ -159,10 +161,20 @@ Run "nftgen help <command>" for more information about a command.
 
 ## References
 
+### General Discussion
+
+https://github.com/xErik/nftgen/discussions
+
+### Issue Tracker
+
+https://github.com/xErik/nftgen/discussions
+
+### Layers 
+
 The example layers are from Hashlips (MIT livense)
 
 https://github.com/HashLips/hashlips_art_engine
 
-## License
+### License
 
 MIT

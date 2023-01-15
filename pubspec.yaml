@@ -1,7 +1,8 @@
 name: nftgen
 description: NFT unique image generator and metadata analyzer, available as package and CLI.
-version: 0.0.4
-homepage: https://github.com/xErik/nftgen
+version: 0.0.5+1
+repository: https://github.com/xErik/nftgen
+issue_tracker: https://github.com/xErik/nftgen/issues
 keywords: nft, crypto
 
 environment:

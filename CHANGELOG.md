@@ -16,4 +16,11 @@
 
 ## 0.0.4
 
-- Proper JSON parsing, CLI args parsing, preparation for streaming messages to UI.
+- Proper JSON parsing
+- CLI args parsing 
+- Peparation for streaming messages to UI
+
+## 0.0.5
+ 
+- Streaming messages to UI
+- Package exposed via CLI
