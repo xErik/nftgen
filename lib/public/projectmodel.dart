@@ -35,14 +35,12 @@ class ProjectLayerModel {
 
 /// Represents `config.json`
 class ProjectModel {
-  final String name;
+  String name;
   String cidCode;
-  final int generateNfts;
-  // final double weightsFactor;
-  final List<ProjectLayerModel> layers;
-  //
+  int generateNfts;
+  List<ProjectLayerModel> layers;
+  Directory layerDir;
   final Directory metaDir;
-  final Directory layerDir;
   final Directory imageDir;
   final Directory rarityDir;
   final File rarityNftCsv;
