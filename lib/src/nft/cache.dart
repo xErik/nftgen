@@ -1,38 +1,25 @@
-import 'dart:io';
+import 'dart:math';
 
-import 'package:nftgen/public/projectmodel.dart';
+class CacheLayerFileWeights {
+  final Random _rnd;
+  final Map<String, List<String>> _cache = {};
 
-class Cache {
-  final Map<String, File> _cache = {};
-  final sep = Platform.pathSeparator;
+  CacheLayerFileWeights(this._rnd);
 
-  void _addCache(String key, String type, String value, String layersDir,
-      List<ProjectLayerModel> confLayers) {
-    late final File file;
-
-    for (var confLayer in confLayers) {
-      final String layerName = confLayer.name;
-      if (layerName == type) {
-        final Directory layerDir = confLayer.directory;
-        final nftFiles = Map<String, int>.from(confLayer.weights).keys;
-        final nftFile =
-            nftFiles.toList().firstWhere((e) => e.startsWith(value));
-        final layerPath = layersDir + sep + layerDir.path + sep + nftFile;
-        file = File(layerPath);
-        break;
+  void _addCache(String key, Map<String, int> weights) {
+    final List<String> keyList = [];
+    for (var entry in weights.entries) {
+      for (var i = 0; i < entry.value; i++) {
+        keyList.add(entry.key);
       }
     }
-
-    _cache.addAll({key: file});
-    // keyList.shuffle(rnd);
+    _cache.addAll({key: keyList});
   }
 
-  File getFile(String type, String value, String layersDir,
-      List<ProjectLayerModel> confLayers) {
-    final key = type + value;
+  String getLayerFileByRandomWeight(String key, Map<String, int> weights) {
     if (_cache.containsKey(key) == false) {
-      _addCache(key, type, value, layersDir, confLayers);
+      _addCache(key, weights);
     }
-    return _cache[key]!;
+    return _cache[key]!.elementAt(_rnd.nextInt(_cache[key]!.length));
   }
 }

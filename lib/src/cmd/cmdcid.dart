@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
-import 'package:nftgen/src/config.dart';
+import 'package:nftgen/core/project.dart';
 import 'package:nftgen/src/shared/io.dart';
-import 'package:nftgen/public/projectmodel.dart';
-import 'package:nftgen/public/streamprint.dart';
+import 'package:nftgen/core/helper/projectmodel.dart';
+import 'package:nftgen/core/helper/streamprint.dart';
 import 'package:path/path.dart';
 
 class CidCommand extends Command {
@@ -15,9 +15,9 @@ class CidCommand extends Command {
 
   CidCommand() {
     argParser
-      ..addOption('project',
-          abbr: "p",
-          help: 'The project path',
+      ..addOption('folder',
+          abbr: "f",
+          help: 'The project folder',
           valueHelp: 'path',
           defaultsTo: Directory.current.absolute.path)
       ..addOption('cid',
@@ -33,14 +33,14 @@ class CidCommand extends Command {
 
   @override
   void run() {
-    final Directory projectDir = Directory(argResults!["project"]);
+    final Directory projectDir = Directory(argResults!["folder"]);
     final File projectFile = Io.getProject(projectDir);
     final ProjectModel projectJson = ProjectModel.loadFromFolder(projectDir);
     final String cidReplace = argResults!["cid"];
 
     Io.assertExistsFolder(projectJson.metaDir);
 
-    Config.updateCidMetadata(projectDir,
+    Project.updateCidMetadata(projectDir,
         cidReplace: cidReplace, cidSearch: projectJson.cidCode);
 
     StreamPrint.prn("Updated CID: ${projectFile.path}");

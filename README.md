@@ -33,16 +33,54 @@ Which translates to these commands:
 ```shell
 dart pub global activate nftgen
 
-nftgen init init -p ./project/ -l ./project/layers/ -n "Your NFT" -o
-nftgen meta -p ./project/    
-nftgen rarity -p ./project/  
-nftgen nft -p ./project/      
-nftgen cid -p ./project/ -c yourCID  
+nftgen init init -f ./project -l ./project/layers -n "Your NFT" -o
+nftgen meta -f ./project    
+nftgen rarity -f ./project  
+nftgen nft -f ./project      
+nftgen cid -f ./project -c yourCID  
 ```
+
+## Windows: Path warning
+
+Paths are not allowed to have trailing, single backslash when giving the path in quotes.
+
+**BAD** 
+
+```
+nftgen.dart meta  -f ".\my project\"
+```
+
+**GOOD** 
+
+```
+nftgen.dart meta  -f ".\my project"
+nftgen.dart meta  -f ".\\my project\\"
+```
+
+## Configuration
 
 `nftgen init` creates `project.json` in a project directory of your choice. The command requires a layers directory. The project directory may be the parent directory of the layers directory.
 
-Regarding all commands: The OPTIONAL parameter ` -p ./project/` specifies the project directory. If not given, the current directory will be used.
+Regarding all commands: The OPTIONAL parameter ` -f ./project/` specifies the project directory. If not given, the current directory will be used.
+
+
+### Probability and Weights
+
+Below is the default configuration of ``nftgen init` regarding layer probabilities `-p` and layer-file weights `-w`.
+
+```
+nftgen -f ./project -n "Your NFT Name" -w 2.0 -p 0.5
+```
+
+`-p` defines between 0.0 and 1.0 the *rare peak* of the NFT collection as a percentage. How many layers are to be rare in general, regardless of the individual weights assigned to layer-files of a layer. The basic assumption is that the later layers are more rare. The parameter generates probability sequences for layers: `0.05, 0.1, 0.2, 0.4, 1.0, 1.0, 1.0, 1.0`.
+
+`-w` defines the **rare** weight distribution between individual layer-files of a layer. The basic assumption is, that the later layer-files are more common. The parameter generates probability sequences for layer-files: `1, 4, 9, 16, 25, 36`. Its function is `pow(item, factor).round()`.
+
+In other words: `-w` determines the steepness of weights within a layer, `-p` determines the probability of the layers themselves.
+
+It follows, that layer-file-weights and layer-probabilities multiply each other upon generation of NFTs.
+
+Once generated, change the weights and probabilities in `project.json` to your liking.
 
 ### project.json
 
@@ -69,6 +107,10 @@ Open `project.json`, re-order the layers, and adjust their weights to your likin
   // Defaults to 0.6 * all-combinations-equal-weights 
   // to avoid rendering slowing down when reaching
   // all-combinations-equal-weights number. 
+  // 
+  // `nftgen init` will cap this at 10.000 for your convenience,
+  // as 10.000 NFTs is the max size for most collections. Change
+  // it manually, if aiming for more NFTs.
   "generateNfts": 250, 
   // Run "nftgen cid -c yourNewCID" to update the metadata files.
   // Do NOT change manually:
@@ -97,12 +139,6 @@ Open `project.json`, re-order the layers, and adjust their weights to your likin
 
 }
 ```
-
-**Probability and Weights**
-
-1. Change the steepness of a layer's `weights` sequence with the `-w` parameter: `nftgen init -p ./project/ -w 3.0`. The larger the NFT collection, the steeper the weights within each layer have to be. Set `-w` to `3.0, 4.0, 5.0, ...`. 
-
-2. Set the `probability` of rare layers in `project.json` manually to `0.05, 0.1, 0.25` etc.
 
 ## How to Use
 

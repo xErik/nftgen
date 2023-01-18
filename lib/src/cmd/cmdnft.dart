@@ -1,10 +1,9 @@
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
-import 'package:nftgen/public/projectmodel.dart';
+import 'package:nftgen/core/helper/projectmodel.dart';
 import 'package:nftgen/src/shared/io.dart';
-import 'package:nftgen/src/nft.dart';
-import 'package:nftgen/public/streamprint.dart';
+import 'package:nftgen/core/nft.dart';
 
 class NftCommand extends Command {
   @override
@@ -14,11 +13,16 @@ class NftCommand extends Command {
 
   NftCommand() {
     argParser
-      ..addOption('project',
-          abbr: "p",
-          help: 'The project path',
+      ..addOption('folder',
+          abbr: "f",
+          help: 'The project folder',
           valueHelp: 'path',
           defaultsTo: Directory.current.absolute.path)
+      ..addOption('size',
+          abbr: "s",
+          help: 'The number of NFTs to generate',
+          valueHelp: 'int',
+          defaultsTo: "-1")
       ..addFlag("kill",
           abbr: "k",
           defaultsTo: true,
@@ -27,7 +31,8 @@ class NftCommand extends Command {
 
   @override
   Future<void> run() async {
-    Directory projectDir = Directory(argResults!["project"]);
+    Directory projectDir = Directory(argResults!["folder"]);
+    int size = int.parse(argResults!["size"]);
     File projectFile = Io.getProject(projectDir);
 
     Io.assertExistsFile(projectFile);
@@ -38,8 +43,6 @@ class NftCommand extends Command {
     Io.assertExistsFolder(model.layerDir);
 
     await Nft.generateNft(
-        projectDir, model.layerDir, model.imageDir, model.metaDir);
-
-    StreamPrint.prn("Created: ${model.imageDir.path}${Io.sep}*.png");
+        projectDir, size, model.layerDir, model.imageDir, model.metaDir);
   }
 }

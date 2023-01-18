@@ -1,24 +1,47 @@
-import 'package:nftgen/public/streamprint.dart';
+import 'package:duration/duration.dart';
+import 'package:nftgen/core/helper/streamprint.dart';
 
 class Eta {
   DateTime _s0 = DateTime.now();
-  void start() => _s0 = DateTime.now();
+  DateTime _s0Last = DateTime.now();
+  final List<int> _durationsEta = [];
+  final List<String> _shunks = [];
+
+  void start() {
+    _s0 = DateTime.now();
+    _s0Last = DateTime.now();
+  }
+
   void write(int index, int max, String message) {
     final durationPast = DateTime.now().difference(_s0);
-    final durationPastStr =
-        durationPast.toString().replaceAll('-', '').split('.')[0];
+    final durationPastStr = prettyDuration(durationPast, abbreviated: true);
 
     final durationTotal =
         Duration(seconds: ((durationPast.inSeconds / index) * max).toInt());
 
-    // final durationTotalStr =
-    //     durationTotal.toString().replaceAll('-', '').split('.')[0];
+    var durationEta = durationTotal - durationPast;
+    _durationsEta.add(durationEta.inSeconds);
+    durationEta = Duration(
+        seconds: _durationsEta.reduce((sum, element) => sum + element) ~/
+            _durationsEta.length);
+    if (_durationsEta.length > 50) {
+      _durationsEta.removeAt(0);
+    }
 
-    final durationEta = durationTotal - durationPast;
-    final durationEtaStr =
-        durationEta.toString().replaceAll('-', '').split('.')[0];
+    final durationEtaStr = prettyDuration(durationEta, abbreviated: true);
 
-    StreamPrint.prn(
-        '${index.toString().padLeft(4, " ")} / $max $message SINCE: $durationPastStr ETA: $durationEtaStr');
+    final durationLast = DateTime.now().difference(_s0Last);
+    final durationLastStr = prettyDuration(
+      durationLast,
+      abbreviated: true,
+      tersity: DurationTersity.millisecond,
+    );
+
+    _s0Last = DateTime.now();
+
+    final out =
+        '${index.toString().padLeft(4, " ")} / $max $message TOOK: $durationLastStr SINCE: $durationPastStr ETA: $durationEtaStr';
+
+    StreamPrint.prn(out);
   }
 }

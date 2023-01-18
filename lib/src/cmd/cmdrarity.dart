@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:args/command_runner.dart';
 import 'package:nftgen/src/shared/io.dart';
-import 'package:nftgen/src/rarity.dart';
-import 'package:nftgen/public/projectmodel.dart';
-import 'package:nftgen/public/streamprint.dart';
+import 'package:nftgen/core/rarity.dart';
+import 'package:nftgen/core/helper/projectmodel.dart';
+import 'package:nftgen/core/helper/streamprint.dart';
 
 class RarityCommand extends Command {
   @override
@@ -14,9 +14,9 @@ class RarityCommand extends Command {
 
   RarityCommand() {
     argParser
-      ..addOption('project',
-          abbr: "p",
-          help: 'The project path',
+      ..addOption('folder',
+          abbr: "f",
+          help: 'The project folder',
           valueHelp: 'path',
           defaultsTo: Directory.current.absolute.path)
       ..addFlag("charts",
@@ -31,7 +31,7 @@ class RarityCommand extends Command {
 
   @override
   void run() async {
-    Directory projectDir = Directory(argResults!["project"]);
+    Directory projectDir = Directory(argResults!["folder"]);
     final bool doCharts = argResults!["charts"];
     final ProjectModel projectJson = ProjectModel.loadFromFolder(projectDir);
 
@@ -41,13 +41,6 @@ class RarityCommand extends Command {
     List<MapEntry<String, double>> sortedAttr =
         Rarity.layers(projectJson.metaDir);
 
-    if (doCharts) {
-      await Rarity.drawChart(
-          projectJson.rarityNftPng.path, sortedNft, 'NFTs: high = high rarity');
-      await Rarity.drawChart(projectJson.rarityLayersPng.path, sortedAttr,
-          'Attributes: low = high rarity');
-    }
-
     Io.writeCsv(sortedNft, projectJson.rarityNftCsv);
     Io.writeCsv(sortedAttr, projectJson.rarityLayersCsv);
 
@@ -55,5 +48,24 @@ class RarityCommand extends Command {
         'Rarity NFTs: ${projectJson.rarityNftCsv.path} (large = rare)');
     StreamPrint.prn(
         'Rarity Layers: ${projectJson.rarityLayersCsv.path} (small = rare)');
+
+    // ------------------------------------------------------------
+    // CHARTS
+    // ------------------------------------------------------------
+
+    if (doCharts) {
+      await Rarity.drawChart(
+          projectJson.rarityNftPng.path, sortedNft, 'NFTs: high = high rarity');
+      await Rarity.drawChart(projectJson.rarityLayersPng.path, sortedAttr,
+          'Attributes: low = high rarity');
+
+      Io.writeCsv(sortedNft, projectJson.rarityNftCsv);
+      Io.writeCsv(sortedAttr, projectJson.rarityLayersCsv);
+
+      StreamPrint.prn(
+          'Chart Rarity NFTs: ${projectJson.rarityNftPng.path} (large = rare)');
+      StreamPrint.prn(
+          'Chart Rarity Layers: ${projectJson.rarityLayersPng.path} (small = rare)');
+    }
   }
 }

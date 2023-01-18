@@ -1,4 +1,5 @@
-import 'package:nftgen/public/streamprint.dart';
+import 'package:nftgen/core/helper/nftcliexception.dart';
+import 'package:nftgen/core/helper/streamprint.dart';
 import 'package:nftgen/cli.dart' as m;
 
 /// General command template:
@@ -9,7 +10,12 @@ import 'package:nftgen/cli.dart' as m;
 Future<dynamic> main(List<String> args) async {
   try {
     await m.main(args);
-  } catch (error) {
-    StreamPrint.prn(error.toString());
+  } on NftCliException catch (e) {
+    print(e.message);
+    print(e.runtimeType);
+    StreamPrint.prn(e.message);
+  } catch (e) {
+    print(e);
+    StreamPrint.prn(e.toString());
   }
 }

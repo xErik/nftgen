@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:nftgen/public/nftcliexception.dart';
-import 'package:nftgen/public/stoptype.dart';
+import 'package:nftgen/core/helper/nftcliexception.dart';
+import 'package:nftgen/core/helper/stoptype.dart';
 
 /// Class to receive stop signals.
 class Stopper {

@@ -5,6 +5,8 @@
 .VsCodeCounter/
 
 # Conventional directory for build output.
+milena/
+
 build/
 project/image/
 project/meta/

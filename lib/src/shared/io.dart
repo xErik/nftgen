@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:nftgen/public/nftcliexception.dart';
-import 'package:nftgen/public/streamprint.dart';
+import 'package:nftgen/core/helper/nftcliexception.dart';
+import 'package:nftgen/core/helper/streamprint.dart';
 import 'package:path/path.dart';
 
 /// Io helper class.
@@ -74,7 +74,8 @@ class Io {
   }
 
   static File getProject(Directory workDir) {
-    return File(normalize(File(workDir.path + sep + projectJson).path));
+    return File(File(workDir.path + sep + projectJson).path);
+    // return File(normalize(File(workDir.path + sep + projectJson).path));
   }
 
   // -----------------------------------------------------------------

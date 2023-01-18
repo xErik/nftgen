@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
-import 'package:nftgen/public/stoptype.dart';
+import 'package:nftgen/core/helper/nftcliexception.dart';
+import 'package:nftgen/core/helper/stoptype.dart';
+import 'package:nftgen/src/cmd/cmddemo.dart';
 import 'package:nftgen/src/shared/stopper.dart';
 
 import 'src/cmd/cmdcid.dart';
@@ -12,28 +14,49 @@ import 'src/cmd/cmdrarity.dart';
 
 /// Runs INIT
 Future<dynamic> init(
-    String projectDir, String layerDir, String name, bool overwrite) async {
+    String projectDir, String layerDir, String name, bool overwrite,
+    {double w = 2.0, double p = 0.5}) async {
   final or = (overwrite == true) ? "--overwrite" : "--no-overwrite";
-  await main(
-      ["init", "-p", projectDir, "-l", layerDir, "-n", name, or, "--no-kill"]);
+  await main([
+    "init",
+    "-f",
+    projectDir,
+    "-l",
+    layerDir,
+    "-n",
+    name,
+    "-w",
+    w.toString(),
+    "-p",
+    p.toString(),
+    or,
+    "--no-kill"
+  ]);
 }
 
 /// Runs META generation
-Future<dynamic> meta(String projectDir) async =>
-    await main(["meta", "-p", projectDir, "--no-kill"]);
+Future<dynamic> meta(String projectDir, [int size = -1]) async =>
+    await main(["meta", "-f", projectDir, "-s", size.toString(), "--no-kill"]);
 
 /// Runs RARITY based on metadata
 Future<dynamic> rarity(String projectDir) async =>
-    await main(["rarity", "-p", projectDir, "--no-kill"]);
+    await main(["rarity", "-f", projectDir, "--no-kill"]);
 
 /// Runs CID update on metadata
 Future<dynamic> cid(String projectDir, String cid) async =>
-    await main(["cid", "-p", projectDir, "-c", cid, "--no-kill"]);
+    await main(["cid", "-f", projectDir, "-c", cid, "--no-kill"]);
 
 /// Runs NFT image generation based on metadata
-Future<dynamic> nft(String projectDir) async =>
-    await main(["nft", "-p", projectDir, "--no-kill"]);
+Future<dynamic> nft(String projectDir, {int size = -1}) async =>
+    await main(["nft", "-f", projectDir, '-s', size.toString(), "--no-kill"]);
 
+/// Runs NFT image generation based on metadata
+Future<dynamic> demo(String projectDir, String layerDir, String name,
+        {int size = -1}) async =>
+    await main(
+        ["demo", "-f", projectDir, "-l", layerDir, '-n', name, "--no-kill"]);
+
+/// Stops the specific command.
 void stop(StopCommand command) => Stopper.stop(command);
 
 /// General command template:
@@ -43,6 +66,7 @@ void stop(StopCommand command) => Stopper.stop(command);
 /// instead of calling exit(64).
 Future<dynamic> main(List<String> args) async {
   final runner = CommandRunner("nftgen", "Generate NFTs")
+    ..addCommand(DemoCommand())
     ..addCommand(InitCommand())
     ..addCommand(MetaCommand())
     ..addCommand(RarityCommand())
@@ -50,17 +74,27 @@ Future<dynamic> main(List<String> args) async {
     ..addCommand(NftCommand());
   try {
     await runner.run(args);
-  } catch (error) {
-    print(error);
-    // print(error.message);
+  } catch (error, stack) {
+    if (error is NftCliException) {
+      print(error.message);
+    } else {
+      print(error);
+      // print(stack);
+    }
     // EXIT if on pure CLI
     if (args.contains("--no-kill") == false) {
-      print("Exiting.");
+      if (error is! UsageException) {
+        print("Exiting.");
+      }
       exit(64); // Exit code 64 indicates a usage error.
+    } else {
+      print(stack);
     }
     // This will throw CliException in case am expected
     // DIR is not found etc.
     // ignore: use_rethrow_when_possible
-    if (error is! UsageException) throw error;
+    if (error is! UsageException) {
+      rethrow;
+    }
   }
 }

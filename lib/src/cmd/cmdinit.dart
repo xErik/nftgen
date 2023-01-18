@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
-import 'package:nftgen/src/config.dart';
+import 'package:nftgen/core/project.dart';
 import 'package:nftgen/src/shared/io.dart';
-import 'package:nftgen/public/nftcliexception.dart';
-import 'package:nftgen/public/streamprint.dart';
+import 'package:nftgen/core/helper/nftcliexception.dart';
+import 'package:nftgen/core/helper/streamprint.dart';
 
 class InitCommand extends Command {
   @override
@@ -15,14 +15,14 @@ class InitCommand extends Command {
   InitCommand() {
     argParser
       ..addOption(
-        'project',
+        'folder',
         mandatory: true,
-        abbr: "p",
-        help: 'The project path',
+        abbr: "f",
+        help: 'The project folder',
         valueHelp: 'path',
       )
       ..addOption('name',
-          mandatory: true, abbr: "n", help: 'NFT name', valueHelp: 'string')
+          abbr: "n", help: 'NFT name', valueHelp: 'string', defaultsTo: "NFT")
       ..addOption('layers',
           mandatory: true,
           abbr: "l",
@@ -30,9 +30,14 @@ class InitCommand extends Command {
           valueHelp: 'path')
       ..addOption('weight-stretch',
           abbr: "w",
-          defaultsTo: "3.0",
+          defaultsTo: "2.0",
           help: 'How to distribute weights within layer',
           valueHelp: 'double')
+      ..addOption('probability-stretch',
+          abbr: "p",
+          defaultsTo: "0.5",
+          help: 'How to distribute probabilities withing layers',
+          valueHelp: 'double between 0.0 and 1.0')
       ..addFlag('overwrite',
           abbr: "o",
           defaultsTo: false,
@@ -45,12 +50,13 @@ class InitCommand extends Command {
 
   @override
   void run() {
-    final Directory projectDir = Directory(argResults!["project"]);
+    final Directory projectDir = Directory(argResults!["folder"]);
     final File projectFile = Io.getProject(projectDir);
 
     final name = argResults!["name"];
     final layerDir = Directory(argResults!["layers"]);
-    final factor = double.parse(argResults!["weight-stretch"]);
+    final factorWeights = double.parse(argResults!["weight-stretch"]);
+    final factorLayers = double.parse(argResults!["probability-stretch"]);
     final isOverwrite = argResults!["overwrite"];
 
     if (isOverwrite == false) {
@@ -63,8 +69,8 @@ class InitCommand extends Command {
       }
     }
 
-    Config.generate(name, layerDir, factorWeights: factor)
-        .saveToFolder(projectDir);
+    Project.generate(name, projectDir, layerDir,
+        factorWeights: factorWeights, factorLayers: factorLayers);
 
     StreamPrint.prn("Created: ${projectFile.path}");
   }

@@ -3,7 +3,7 @@
 import 'dart:io';
 
 import 'package:nftgen/cli.dart' as cli;
-import 'package:nftgen/public/nftcliexception.dart';
+import 'package:nftgen/core/helper/nftcliexception.dart';
 
 import 'package:test/test.dart';
 
