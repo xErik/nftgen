@@ -1,9 +1,8 @@
-import 'package:commandline_or_gui_windows/commandline_or_gui_windows.dart';
-import 'package:flutter/material.dart';
-import 'package:nftgen/core/helper/nftcliexception.dart';
-import 'package:nftgen/core/helper/streamprint.dart';
-import 'package:nftgen/cli.dart' as cli;
-import 'dart:io';
+// import 'package:commandline_or_gui_windows/commandline_or_gui_windows.dart';
+// import 'package:flutter/material.dart';
+// import 'package:nftgen/core/helper/nftcliexception.dart';
+// import 'package:nftgen/core/helper/streamprint.dart';
+// import 'dart:io';
 
 /// General command template:
 /// nftgen <COMMAND> [<PROJECT-DIR>] <PARAMETERS>
@@ -12,7 +11,7 @@ import 'dart:io';
 /// instead of calling exit(64).
 // Future<dynamic> main(List<String> args) async {
 //   try {
-//     await m.main(args);
+//     await cli.main(args);
 //   } on NftCliException catch (e) {
 //     print(e.message);
 //     print(e.runtimeType);
@@ -23,27 +22,22 @@ import 'dart:io';
 //   }
 // }
 
-/// Available as a development wrapper for generating an EXE.
+import 'dart:io';
+
+import 'package:commandline_or_gui_windows/commandline_or_gui_windows.dart';
+import 'package:flutter/material.dart';
+import 'package:nftgen/cli.dart' as cli;
+
 main(List<String> args) {
   CommandlineOrGuiWindows.runAppCommandlineOrGUI(
       argsCount: args.length,
       closeOnCompleteCommandlineOptionOnly: true,
       commandlineRun: () async {
-        try {
-          await cli.main(args);
-          exit(0);
-        } on NftCliException catch (e) {
-          print(e.message);
-          StreamPrint.prn(e.message);
-          exit(1);
-        } catch (e) {
-          print(e);
-          StreamPrint.prn(e.toString());
-          exit(1);
-        }
+        // print(args);
+        // stdout.writeln(args);
+        await cli.main(args);
+        exit(0);
       },
-
-      // gui to be shown when running in gui mode
       gui: const MaterialApp(
           home: Scaffold(
               body: Center(
