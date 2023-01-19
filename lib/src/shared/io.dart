@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:nftgen/core/helper/nftcliexception.dart';
 import 'package:nftgen/core/helper/streamprint.dart';
-import 'package:path/path.dart';
 
 /// Io helper class.
 class Io {

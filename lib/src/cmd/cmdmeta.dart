@@ -2,9 +2,8 @@ import 'dart:io';
 
 import 'package:args/command_runner.dart';
 import 'package:nftgen/src/shared/io.dart';
-import 'package:nftgen/core/nft.dart';
+import 'package:nftgen/src/nft.dart';
 import 'package:nftgen/core/helper/projectmodel.dart';
-import 'package:nftgen/core/helper/streamprint.dart';
 
 class MetaCommand extends Command {
   @override

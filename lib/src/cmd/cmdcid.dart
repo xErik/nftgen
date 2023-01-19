@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
-import 'package:nftgen/core/project.dart';
+import 'package:nftgen/src/project.dart';
 import 'package:nftgen/src/shared/io.dart';
 import 'package:nftgen/core/helper/projectmodel.dart';
 import 'package:nftgen/core/helper/streamprint.dart';

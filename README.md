@@ -2,6 +2,23 @@
 
 NFT unique image generator and metadata analyzer. Package and CLI enabled.
 
+**TODO DOCS**
+
+During development:
+
+`flutter run --release --dart-entrypoint-args init,-f,.\project\,-l,.\project\layer\,-o`
+
+Generates EXE in bin/
+
+dart .\tool\build.dart
+
+Use in other packages and call its methods:
+
+`lib/cli.dart`
+
+
+Also: Code fork between Flutter and pure Dart for image generation.
+
 **nftgen EXE**
 
 A [ready-to-use command line EXE](https://github.com/xErik/nftgen/releases) is available. Always do a security check when downloading executables.

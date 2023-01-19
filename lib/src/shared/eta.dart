@@ -5,7 +5,6 @@ class Eta {
   DateTime _s0 = DateTime.now();
   DateTime _s0Last = DateTime.now();
   final List<int> _durationsEta = [];
-  final List<String> _shunks = [];
 
   void start() {
     _s0 = DateTime.now();
@@ -24,7 +23,7 @@ class Eta {
     durationEta = Duration(
         seconds: _durationsEta.reduce((sum, element) => sum + element) ~/
             _durationsEta.length);
-    if (_durationsEta.length > 50) {
+    if (_durationsEta.length > 5) {
       _durationsEta.removeAt(0);
     }
 

@@ -26,9 +26,6 @@
 import 'dart:io';
 import 'dart:ui';
 
-// import 'package:image/image.dart';
-import 'package:path/path.dart';
-
 class CacheImage {
   final Map<String, Image> _cache = {};
 

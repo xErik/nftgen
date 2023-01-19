@@ -3,6 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  commandline_or_gui_windows
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST

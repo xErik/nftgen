@@ -59,6 +59,8 @@ Future<dynamic> demo(String projectDir, String layerDir, String name,
 /// Stops the specific command.
 void stop(StopCommand command) => Stopper.stop(command);
 
+/// Available as a package for Flutter apps.
+///
 /// General command template:
 /// nftgen <COMMAND> [<PROJECT-DIR>] <PARAMETERS>
 ///
