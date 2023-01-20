@@ -1,1 +1,1 @@
-enum StopCommand { init, meta, rarity, nft, cid, demo }
+// enum StopCommand { init, meta, rarity, nft, cid, demo }

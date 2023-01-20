@@ -33,14 +33,14 @@ class Project {
     final layerProbs = _probs(layerDirs.length, factorLayers);
 
     for (var dirIndex = 0; dirIndex < layerDirs.length; dirIndex++) {
-      final fse = layerDirs.elementAt(dirIndex);
+      final singleLayerDir = layerDirs.elementAt(dirIndex);
 
-      final layerName = basename(fse.path);
+      final layerName = basename(singleLayerDir.path);
       final Map<String, int> weights = {};
 
       // WEIGHTS
 
-      final entries = Directory(fse.path).listSync();
+      final entries = Directory(singleLayerDir.path).listSync();
       for (var i = 1; i <= entries.length; i++) {
         final FileSystemEntity layerFile = entries.elementAt(i - 1);
         final String layerEntity = basename(layerFile.path);
@@ -52,7 +52,6 @@ class Project {
 
       generateNfts =
           generateNfts == 0 ? entries.length : generateNfts * entries.length;
-
       // LAYER
 
       layerEntries.add(ProjectLayerModel(layerName, Directory(layerName),
@@ -61,8 +60,10 @@ class Project {
 
     // PROJECT
 
-    final projectModel = ProjectModel.init(
-        name, generateNfts, factorMaxNft, layerEntries, layerDir);
+    generateNfts = min(10000, (generateNfts * factorMaxNft).toInt());
+
+    final projectModel =
+        ProjectModel.init(name, generateNfts, layerEntries, layerDir);
 
     projectModel.saveToFolder(projectDir);
 
@@ -124,7 +125,7 @@ class Project {
     final entries = metaDir.listSync();
 
     for (var entry in entries) {
-      Stopper.assertNotStopped(StopCommand.cid);
+      Stopper.assertNotStopped();
       final file = File(entry.path);
       final json = Io.readJson(file);
       json['image'] =

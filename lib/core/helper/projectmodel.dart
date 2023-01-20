@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:nftgen/src/shared/io.dart';
 import 'package:path/path.dart';
+import 'dart:convert';
 
 /// Part of `config.json`.
 class ProjectLayerModel {
@@ -69,12 +70,12 @@ class ProjectModel {
 
   /// Returns model with initial values. Some of the model's values are set
   /// to sensible defaults.
-  static ProjectModel init(String name, int generateNfts, double factorMaxNft,
+  static ProjectModel init(String name, int generateNfts,
       List<ProjectLayerModel> projectLayers, Directory layersDir) {
     return ProjectModel(
       name,
       cidDefaultCode,
-      (generateNfts * factorMaxNft).toInt(),
+      generateNfts,
       projectLayers,
       Directory("meta"),
       Directory(normalize(layersDir.absolute.path)),
@@ -190,5 +191,33 @@ class ProjectModel {
       "rarityNftPng": basename(rarityNftPng.path),
       "rarityLayersPng": basename(rarityLayersPng.path),
     };
+  }
+
+  /// Convenience method.
+  String toPrettyJson() {
+    var encoder = new JsonEncoder.withIndent("  ");
+    return encoder.convert(toJson());
+  }
+
+  int getLayerCount() {
+    return layers.length;
+  }
+
+  int getFileCount() {
+    int files = 0;
+    for (var layer in layers) {
+      files += layer.weights.length;
+    }
+    return files;
+  }
+
+  int getCombinationCount() {
+    int combinations = 0;
+    for (var layer in layers) {
+      combinations = combinations == 0
+          ? layer.weights.length
+          : combinations * layer.weights.length;
+    }
+    return combinations;
   }
 }

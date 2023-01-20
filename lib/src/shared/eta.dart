@@ -12,6 +12,10 @@ class Eta {
   }
 
   void write(int index, int max, String message) {
+    if (message.length > 30) {
+      message = '...' + message.substring(message.length - 30);
+    }
+
     final durationPast = DateTime.now().difference(_s0);
     final durationPastStr = prettyDuration(durationPast, abbreviated: true);
 
@@ -33,7 +37,7 @@ class Eta {
     final durationLastStr = prettyDuration(
       durationLast,
       abbreviated: true,
-      tersity: DurationTersity.millisecond,
+      tersity: DurationTersity.second,
     );
 
     _s0Last = DateTime.now();

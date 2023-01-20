@@ -22,7 +22,7 @@ class Rarity {
     final metasFiles = Io.getJsonFiles(metaDir);
 
     for (var meta in metasFiles) {
-      Stopper.assertNotStopped(StopCommand.rarity);
+      Stopper.assertNotStopped();
       final metaJson = Io.readJson(File(meta.path));
       final List<dynamic> atts = metaJson['attributes'];
 
@@ -66,7 +66,7 @@ class Rarity {
     final metas = Io.getJsonFiles(metaDir);
 
     for (var i = 0; i < metas.length; i++) {
-      Stopper.assertNotStopped(StopCommand.rarity);
+      Stopper.assertNotStopped();
 
       final meta = metas.elementAt(i);
       final js = Io.readJson(File(meta.path));
@@ -93,7 +93,7 @@ class Rarity {
     final Map<String, double> items = {};
 
     for (var i = 0; i < metas.length; i++) {
-      Stopper.assertNotStopped(StopCommand.rarity);
+      Stopper.assertNotStopped();
 
       final meta = metas.elementAt(i);
       final js = Io.readJson(File(meta.path));

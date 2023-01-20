@@ -61,7 +61,7 @@ class DemoCommand extends Command {
     final w = double.parse(argResults!["weight-stretch"]);
     final p = double.parse(argResults!["probability-stretch"]);
     final isOverwrite = argResults!["overwrite"];
-
+    // print('  BBB $size');
     try {
       Io.assertExistsFolder(layerDir);
 

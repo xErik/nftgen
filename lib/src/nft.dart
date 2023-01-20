@@ -46,7 +46,7 @@ class Nft {
     final Map<int, Map<String, dynamic>> generated = {};
 
     for (var nftId = 1; nftId <= generateNfts; nftId++) {
-      Stopper.assertNotStopped(StopCommand.meta);
+      Stopper.assertNotStopped();
       String nftDna = '';
       final List<Map<String, String>> attributes = [];
 
@@ -133,7 +133,7 @@ class Nft {
     imagesDir.createSync(recursive: true);
 
     for (var nftId = 1; nftId <= confGenerateNfts; nftId++) {
-      Stopper.assertNotStopped(StopCommand.nft);
+      Stopper.assertNotStopped();
       imageFiles.clear();
 
       final metaJson =
@@ -169,7 +169,7 @@ class Nft {
                   nftSize["height"]!.toDouble())));
 
       for (var imageFile in imageFiles) {
-        Stopper.assertNotStopped(StopCommand.nft);
+        Stopper.assertNotStopped();
         // final img = await cacheImage.getImage(imageFile);
 
         var codec = await ui.instantiateImageCodec(imageFile.readAsBytesSync());

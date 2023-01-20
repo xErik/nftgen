@@ -53,11 +53,23 @@ Future<dynamic> nft(String projectDir, {int size = -1}) async =>
 /// Runs NFT image generation based on metadata
 Future<dynamic> demo(String projectDir, String layerDir, String name,
         {int size = -1}) async =>
-    await main(
-        ["demo", "-f", projectDir, "-l", layerDir, '-n', name, "--no-kill"]);
+    await main([
+      "demo",
+      "-f",
+      projectDir,
+      "-l",
+      layerDir,
+      '-n',
+      name,
+      '-w',
+      "0.0",
+      "--no-kill",
+      "-s",
+      size.toString()
+    ]);
 
 /// Stops the specific command.
-void stop(StopCommand command) => Stopper.stop(command);
+void stop() => Stopper.stop();
 
 /// Available as a package for Flutter apps.
 ///
