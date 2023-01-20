@@ -2,8 +2,8 @@
 
 import 'dart:io';
 
-import 'package:nftgen/cli.dart' as cli;
-import 'package:nftgen/core/helper/nftcliexception.dart';
+import 'package:nftgen/main.dart' as cli;
+import 'package:nftgen/framework/nftcliexception.dart';
 
 import 'package:test/test.dart';
 
@@ -20,7 +20,7 @@ void main() {
       await cli.rarity(projectDir);
       await cli.cid(projectDir, "NEW-CID");
       await cli.nft(projectDir);
-    } on NftCliException catch (e) {
+    } on NftException catch (e) {
       print(e.message);
     }
   });

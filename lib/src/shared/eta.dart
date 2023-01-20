@@ -1,5 +1,5 @@
 import 'package:duration/duration.dart';
-import 'package:nftgen/core/helper/streamprint.dart';
+import 'package:nftgen/framework/streamprint.dart';
 
 class Eta {
   DateTime _s0 = DateTime.now();
@@ -13,7 +13,7 @@ class Eta {
 
   void write(int index, int max, String message) {
     if (message.length > 30) {
-      message = '...' + message.substring(message.length - 30);
+      message = '...${message.substring(message.length - 30)}';
     }
 
     final durationPast = DateTime.now().difference(_s0);

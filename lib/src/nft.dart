@@ -1,13 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
-import 'dart:typed_data';
-import 'dart:ui' as ui;
 
-import 'package:flutter/rendering.dart';
 import 'package:humanize_big_int/humanize_big_int.dart';
-import 'package:nftgen/core/helper/projectmodel.dart';
-import 'package:nftgen/core/helper/stoptype.dart';
+import 'package:nftgen/framework/drawbase.dart';
+import 'package:nftgen/framework/drawdart.dart';
+import 'package:nftgen/framework/projectmodel.dart';
+import 'package:nftgen/framework/streamprint.dart';
 import 'package:nftgen/src/shared/stopper.dart';
 import 'package:nftgen/src/shared/eta.dart';
 import 'package:path/path.dart';
@@ -18,8 +17,6 @@ import 'nft/dna.dart';
 import 'shared/io.dart';
 
 import 'package:image/image.dart' as ig;
-
-// import 'package:flutter/material.dart';
 
 /// Generates NFTs and metadata
 class Nft {
@@ -112,20 +109,22 @@ class Nft {
   /// 2. Number of `size` parameter
   /// 3. Number specified in `project.json`
   static Future<void> generateNft(Directory projectDir, int size,
-      Directory layersDir, Directory imagesDir, Directory metaDir) async {
+      Directory layersDir, Directory imagesDir, Directory metaDir,
+      [DrawBase? drawService]) async {
     final eta = Eta()..start();
     final sep = Platform.pathSeparator;
     final ProjectModel model = ProjectModel.loadFromFolder(projectDir);
     final confLayers = model.layers;
+    final canvasService = drawService ?? DrawDart();
+
+    StreamPrint.prn('Using draw service: ${canvasService.runtimeType}');
+
     int confGenerateNfts = size > -1 ? size : model.generateNfts;
     confGenerateNfts = min(confGenerateNfts, metaDir.listSync().length);
 
     final nftSize = await getImageSize(layersDir);
     final List<File> imageFiles = [];
-    // final canvas =
-    //     ig.Image(width: nftSize['width']!, height: nftSize["height"]!);
     final cacheFile = nft.CacheFile();
-    // final cacheImage = CacheImage();
 
     if (imagesDir.existsSync()) {
       imagesDir.deleteSync(recursive: true);
@@ -160,41 +159,40 @@ class Nft {
       // var fileImage = '${imagesDir.path}${Platform.pathSeparator}$nftId.png';
       // File(fileImage).writeAsBytesSync(ig.encodePng(canvas));
 
-      final recorder = ui.PictureRecorder();
-      final canvas = Canvas(
-          recorder,
-          Rect.fromPoints(
-              Offset(0.0, 0.0),
-              Offset(nftSize["width"]!.toDouble(),
-                  nftSize["height"]!.toDouble())));
+// ----------------------------------
 
-      for (var imageFile in imageFiles) {
-        Stopper.assertNotStopped();
-        // final img = await cacheImage.getImage(imageFile);
+      // final recorder = ui.PictureRecorder();
+      // final canvas = Canvas(
+      //     recorder,
+      //     Rect.fromPoints(
+      //         Offset(0.0, 0.0),
+      //         Offset(nftSize["width"]!.toDouble(),
+      //             nftSize["height"]!.toDouble())));
 
-        var codec = await ui.instantiateImageCodec(imageFile.readAsBytesSync());
-        var frame = await codec.getNextFrame();
-        final img = frame.image;
-        canvas.drawImage(img, Offset(0, 0), Paint());
+      // for (var imageFile in imageFiles) {
+      //   Stopper.assertNotStopped();
+      //   // final img = await cacheImage.getImage(imageFile);
 
-        // IMAGE PACKAGE
-        // final img = await _loadImage(imageFile, cacheImage);
-        //   ig.compositeImage(canvas, (await ig.decodeImageFile(imageFile.path))!);
-        //   // ig.compositeImage(canvas, await cacheImage.getImage(imageFile));
-      }
+      //   var codec = await ui.instantiateImageCodec(imageFile.readAsBytesSync());
+      //   var frame = await codec.getNextFrame();
+      //   final img = frame.image;
+      //   canvas.drawImage(img, Offset(0, 0), Paint());
+      // }
 
-      final picture = recorder.endRecording();
+      // final picture = recorder.endRecording();
 
-      ui.Image img =
-          await picture.toImage(nftSize["width"]!, nftSize["height"]!);
-      final ByteData? pngBytes =
-          await img.toByteData(format: ui.ImageByteFormat.png);
+      // ui.Image img =
+      //     await picture.toImage(nftSize["width"]!, nftSize["height"]!);
+      // final ByteData? pngBytes =
+      //     await img.toByteData(format: ui.ImageByteFormat.png);
 
-      var fileImage = '${imagesDir.path}${Platform.pathSeparator}$nftId.png';
+// ----------------------------------
 
-      // print(' WRITE IMG: ${fileImage}');
+      final fileImage = '${imagesDir.path}${Platform.pathSeparator}$nftId.png';
+      final pngBytes = await canvasService.draw(
+          nftSize["width"]!, nftSize["height"]!, imageFiles);
 
-      File(fileImage).writeAsBytesSync(pngBytes!.buffer.asUint8List());
+      File(fileImage).writeAsBytesSync(pngBytes.buffer.asUint8List());
 
       // -----------------------------------------------------
       // PRINT an ETA

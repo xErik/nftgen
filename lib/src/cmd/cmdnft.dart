@@ -1,7 +1,8 @@
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
-import 'package:nftgen/core/helper/projectmodel.dart';
+import 'package:nftgen/framework/drawbase.dart';
+import 'package:nftgen/framework/projectmodel.dart';
 import 'package:nftgen/src/shared/io.dart';
 import 'package:nftgen/src/nft.dart';
 
@@ -10,8 +11,9 @@ class NftCommand extends Command {
   final name = "nft";
   @override
   final description = "Generates NFT images based on metadata";
+  final DrawBase? drawService;
 
-  NftCommand() {
+  NftCommand(this.drawService) {
     argParser
       ..addOption('folder',
           abbr: "f",
@@ -42,7 +44,7 @@ class NftCommand extends Command {
     Io.assertExistsFolder(model.metaDir);
     Io.assertExistsFolder(model.layerDir);
 
-    await Nft.generateNft(
-        projectDir, size, model.layerDir, model.imageDir, model.metaDir);
+    await Nft.generateNft(projectDir, size, model.layerDir, model.imageDir,
+        model.metaDir, drawService);
   }
 }

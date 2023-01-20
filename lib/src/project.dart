@@ -1,11 +1,10 @@
 import 'dart:io';
 import 'dart:math';
 
-import 'package:nftgen/core/helper/stoptype.dart';
 import 'package:nftgen/src/shared/stopper.dart';
 import 'package:nftgen/src/shared/io.dart';
-import 'package:nftgen/core/helper/projectmodel.dart';
-import 'package:nftgen/core/helper/streamprint.dart';
+import 'package:nftgen/framework/projectmodel.dart';
+import 'package:nftgen/framework/streamprint.dart';
 import 'package:path/path.dart';
 
 /// Generates a config file to generate NFTs.

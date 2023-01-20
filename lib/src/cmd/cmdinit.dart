@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:args/command_runner.dart';
 import 'package:nftgen/src/project.dart';
 import 'package:nftgen/src/shared/io.dart';
-import 'package:nftgen/core/helper/nftcliexception.dart';
-import 'package:nftgen/core/helper/streamprint.dart';
+import 'package:nftgen/framework/nftcliexception.dart';
+import 'package:nftgen/framework/streamprint.dart';
 
 class InitCommand extends Command {
   @override
@@ -62,10 +62,8 @@ class InitCommand extends Command {
     if (isOverwrite == false) {
       try {
         Io.asserExistsNotFile(projectFile);
-      } on NftCliException catch (e) {
-        throw NftCliException("${e.message}, use -o to overwrite.");
-      } catch (e) {
-        throw NftCliException(e.toString());
+      } on NftFileNotFoundException catch (e) {
+        throw NftFileNotFoundException("${e.message}, use -o to overwrite.");
       }
     }
 

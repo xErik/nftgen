@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:nftgen/core/helper/nftcliexception.dart';
-import 'package:nftgen/core/helper/streamprint.dart';
+import 'package:nftgen/framework/nftcliexception.dart';
+import 'package:nftgen/framework/streamprint.dart';
 
 /// Io helper class.
 class Io {
@@ -74,43 +74,43 @@ class Io {
 
   static File getProject(Directory workDir) {
     return File(File(workDir.path + sep + projectJson).path);
-    // return File(normalize(File(workDir.path + sep + projectJson).path));
   }
 
   // -----------------------------------------------------------------
 
-  // throws NftCliException if false.
   static bool checkProjectFolderExits(Directory projectDir) {
     final projectFile = getProject(projectDir);
     return projectFile.existsSync();
   }
 
-  /// throws NftCliException if false.
+  /// throws NftFileNotFoundException if false.
   static void assertExistsFile(File projectFile) {
     // print("projectFile.existsSync() ${projectFile.existsSync()}");
     if (projectFile.existsSync() == false) {
-      throw NftCliException("File does not exist: ${projectFile.path} ");
+      throw NftFileNotFoundException(
+          "File does not exist: ${projectFile.path} ");
     }
   }
 
-  /// throws NftCliException if true.
+  /// throws NftFileNotFoundException if true.
   static void asserExistsNotFile(File projectFile) {
     if (projectFile.existsSync() == true) {
-      throw NftCliException("File does exist: ${projectFile.path}");
+      throw NftFileNotFoundException("File does exist: ${projectFile.path}");
     }
   }
 
-  /// throws NftCliException if false.
+  /// throws NftFolderNotFoundException if false.
   static void assertExistsFolder(Directory metaDir) {
     if (metaDir.existsSync() == false) {
-      throw NftCliException("Folder does not exist: ${metaDir.path}");
+      throw NftFolderNotFoundException(
+          "Folder does not exist: ${metaDir.path}");
     }
   }
 
-  /// throws NftCliException if true.
+  /// throws NftFolderNotFoundException if true.
   static void assertExistsNotFolder(Directory metaDir) {
     if (metaDir.existsSync() == true) {
-      throw NftCliException("Folder does exist: ${metaDir.path} ");
+      throw NftFolderNotFoundException("Folder does exist: ${metaDir.path} ");
     }
   }
 }

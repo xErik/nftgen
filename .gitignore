@@ -13,3 +13,8 @@ project/meta/
 project/rarity/
 project/project.json
 bla/
+
+ios/
+linux/
+android/
+macos/

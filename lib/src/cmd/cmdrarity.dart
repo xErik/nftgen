@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:args/command_runner.dart';
 import 'package:nftgen/src/shared/io.dart';
 import 'package:nftgen/src/rarity.dart';
-import 'package:nftgen/core/helper/projectmodel.dart';
-import 'package:nftgen/core/helper/streamprint.dart';
+import 'package:nftgen/framework/projectmodel.dart';
+import 'package:nftgen/framework/streamprint.dart';
 
 class RarityCommand extends Command {
   @override

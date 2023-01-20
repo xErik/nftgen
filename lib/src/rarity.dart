@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:math';
 
-import 'package:nftgen/core/helper/stoptype.dart';
 import 'package:nftgen/src/shared/stopper.dart';
 import 'package:nftgen/src/shared/eta.dart';
 import 'package:nftgen/src/shared/io.dart';

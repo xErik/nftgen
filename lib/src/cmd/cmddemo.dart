@@ -1,9 +1,10 @@
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
-import 'package:nftgen/cli.dart';
-import 'package:nftgen/core/helper/nftcliexception.dart';
-import 'package:nftgen/core/helper/streamprint.dart';
+import 'package:nftgen/framework/drawbase.dart';
+import 'package:nftgen/main.dart';
+import 'package:nftgen/framework/nftcliexception.dart';
+import 'package:nftgen/framework/streamprint.dart';
 import 'package:nftgen/src/shared/io.dart';
 
 class DemoCommand extends Command {
@@ -12,8 +13,9 @@ class DemoCommand extends Command {
   @override
   late final String description;
   final String currentSize = 50.toString();
+  final DrawBase? drawService;
 
-  DemoCommand() {
+  DemoCommand(this.drawService) {
     description = "Generates $currentSize NFT images based on layers";
 
     argParser
@@ -72,7 +74,7 @@ class DemoCommand extends Command {
       await nft(projectDir.path, size: size);
 
       StreamPrint.prn("Demo finished with size: $size");
-    } on NftCliException catch (e) {
+    } on NftException catch (e) {
       StreamPrint.err(e.message);
     } catch (e) {
       StreamPrint.err(e.toString());

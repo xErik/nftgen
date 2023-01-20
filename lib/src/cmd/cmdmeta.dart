@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:args/command_runner.dart';
 import 'package:nftgen/src/shared/io.dart';
 import 'package:nftgen/src/nft.dart';
-import 'package:nftgen/core/helper/projectmodel.dart';
+import 'package:nftgen/framework/projectmodel.dart';
 
 class MetaCommand extends Command {
   @override
@@ -33,7 +33,7 @@ class MetaCommand extends Command {
   void run() async {
     Directory projectDir = Directory(argResults!["folder"]);
     int size = int.parse(argResults!["size"]);
-    // print('> ${projectDir.absolute.path}');
+
     File projectFile = Io.getProject(projectDir);
     Io.assertExistsFile(projectFile);
 

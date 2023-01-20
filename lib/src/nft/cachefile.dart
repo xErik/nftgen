@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:nftgen/core/helper/projectmodel.dart';
+import 'package:nftgen/framework/projectmodel.dart';
 
 class CacheFile {
   final Map<String, File> _cache = {};

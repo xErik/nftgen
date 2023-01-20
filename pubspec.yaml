@@ -23,4 +23,4 @@ dependencies:
   image: ^4.0.8
   io: ^1.0.3
   path: ^1.8.2
-  commandline_or_gui_windows: ^2.1.0
+  commandline_or_gui_windows: ^2.1.2
