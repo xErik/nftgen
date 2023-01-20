@@ -89,6 +89,7 @@ class Stopper {
 
   static void assertNotStopped() {
     if (_isStopped) {
+      _isStopped = false;
       throw throw NftCliException('Aborting, received stop signal.');
     }
   }
