@@ -66,19 +66,15 @@ class Io {
   }
 
   /// Saves `sortedEntries` to `csvFile`.
-  static void writeCsv(
-      List<MapEntry<String, double>> sortedEntries, File csvFile) {
-    var outCsv = '';
-
+  static Future writeCsv(
+      List<MapEntry<String, double>> sortedEntries, File csvFile) async {
+    final outCsv = StringBuffer();
     for (var entry in sortedEntries) {
-      final String key = entry.key;
-      final double count = entry.value;
-      // final String perc = attributeCountPercentage[entry.key]!.toStringAsFixed(2);
-      outCsv += '$key, $count\n';
+      outCsv.writeln("${entry.key}, ${entry.value}");
     }
 
-    csvFile.parent.createSync(recursive: true);
-    csvFile.writeAsStringSync(outCsv);
+    await csvFile.parent.create(recursive: true);
+    await csvFile.writeAsString(outCsv.toString());
   }
 
   /// Returns JSON files: ending in `.json` and not starting

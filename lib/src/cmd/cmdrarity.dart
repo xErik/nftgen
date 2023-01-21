@@ -43,8 +43,8 @@ class RarityCommand extends Command {
     List<MapEntry<String, double>> sortedAttr =
         await Rarity.layers(projectJson.metaDir);
 
-    Io.writeCsv(sortedNft, projectJson.rarityNftCsv);
-    Io.writeCsv(sortedAttr, projectJson.rarityLayersCsv);
+    await Io.writeCsv(sortedNft, projectJson.rarityNftCsv);
+    await Io.writeCsv(sortedAttr, projectJson.rarityLayersCsv);
 
     StreamPrint.prn(
         'Rarity NFTs: ${projectJson.rarityNftCsv.path} (large = rare)');
@@ -60,9 +60,6 @@ class RarityCommand extends Command {
           projectJson.rarityNftPng.path, sortedNft, 'NFTs: high = high rarity');
       await Rarity.drawChart(projectJson.rarityLayersPng.path, sortedAttr,
           'Attributes: low = high rarity');
-
-      Io.writeCsv(sortedNft, projectJson.rarityNftCsv);
-      Io.writeCsv(sortedAttr, projectJson.rarityLayersCsv);
 
       StreamPrint.prn(
           'Chart Rarity NFTs: ${projectJson.rarityNftPng.path} (large = rare)');

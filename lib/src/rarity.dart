@@ -122,7 +122,7 @@ class Rarity {
       items[meta.path] = rarity;
 
       if (i + 1 == 1 || i == metas.length - 1 || (i + 1) % 100 == 0) {
-        eta.write(i + 1, metas.length * 2, '');
+        eta.write(i + 1 + metas.length, metas.length * 2, '');
       }
     }
 
