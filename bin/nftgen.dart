@@ -1,4 +1,5 @@
-import 'package:nftgen/framework/drawdart.dart';
+import 'dart:io';
+
 import 'package:nftgen/main.dart' as cli;
 import 'package:nftgen/framework/nftcliexception.dart';
 
@@ -17,6 +18,6 @@ Future<dynamic> main(List<String> args) async {
   try {
     await cli.main(args);
   } on NftException catch (e) {
-    print(e.message);
+    stderr.writeln(e.message);
   }
 }

@@ -90,19 +90,18 @@ Future<dynamic> main(List<String> args, [DrawBase? drawService]) async {
     await runner.run(args);
   } catch (error, stack) {
     if (error is NftException) {
-      print(error.message);
+      stderr.writeln(error.message);
     } else {
-      print(error);
-      // print(stack);
+      stderr.writeln(error);
     }
     // EXIT if on pure CLI
     if (args.contains("--no-kill") == false) {
       if (error is! UsageException) {
-        print("Exiting.");
+        stdout.writeln("Exiting.");
       }
       exit(64); // Exit code 64 indicates a usage error.
     } else {
-      print(stack);
+      stderr.writeln(stack);
     }
     // This will throw CliException in case am expected
     // DIR is not found etc.

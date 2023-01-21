@@ -1,30 +1,80 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:nftgen/framework/nftcliexception.dart';
 import 'package:nftgen/framework/streamprint.dart';
+
+// static Future<Map<String, dynamic>> _parseInBackground() async {
+//   final p = ReceivePort();
+//   await Isolate.spawn(_writeJson, p.sendPort);
+//   return await p.first as Map<String, dynamic>;
+// }
+
+//
+
+// JsonEncoder encoder = JsonEncoder.withIndent('  ', (val) {
+//   if (val is Directory) {
+//     return val.absolute.path;
+//   }
+//   if (val is File) {
+//     return val.absolute.path;
+//   }
+//   StreamPrint.err("Stringifying value with type: $val");
+//   throw val.toString();
+// });
+// String prettyprint = encoder.convert(config);
+// targetFile.parent.createSync(recursive: true);
+// targetFile.writeAsStringSync(prettyprint);
+
+class CustomObject {
+  File file;
+  Map<String, dynamic> config;
+  SendPort sendPort;
+
+  CustomObject(this.file, this.config, this.sendPort);
+}
 
 /// Io helper class.
 class Io {
   static final sep = Platform.pathSeparator;
   static final String projectJson = 'project.json';
 
-  /// Write a JSON file.
-  static void writeJson(File json, Map<String, dynamic> config) {
-    JsonEncoder encoder = JsonEncoder.withIndent('  ', (val) {
-      if (val is Directory) {
-        return val.absolute.path;
-      }
-      if (val is File) {
-        return val.absolute.path;
-      }
-      StreamPrint.err("Stringifying value with type: $val");
-      throw val.toString();
-    });
+  static final JsonEncoder encoder = JsonEncoder.withIndent('  ', (val) {
+    if (val is Directory) {
+      return val.absolute.path;
+    }
+    if (val is File) {
+      return val.absolute.path;
+    }
+    StreamPrint.err("Stringifying value with type: $val");
+    throw val.toString();
+  });
+
+  static void writeJson(File targetFile, Map<String, dynamic> config) {
     String prettyprint = encoder.convert(config);
-    json.parent.createSync(recursive: true);
-    json.writeAsStringSync(prettyprint);
+    targetFile.parent.createSync(recursive: true);
+    targetFile.writeAsStringSync(prettyprint);
   }
+
+  /// Write a JSON file.
+  // static Future writeJson(File targetFile, Map<String, dynamic> config) async {
+  //   final ReceivePort receivePort = ReceivePort();
+  //   final obj = CustomObject(targetFile, config, receivePort.sendPort);
+  //   await Isolate.spawn(_writeJson, obj);
+  //   await receivePort.first;
+  // }
+
+  // static void _writeJson(CustomObject obj) async {
+  //   final targetFile = obj.file;
+  //   final config = obj.config;
+
+  //   String prettyprint = encoder.convert(config);
+  //   await targetFile.parent.create(recursive: true);
+  //   await targetFile.writeAsString(prettyprint);
+
+  //   obj.sendPort.send(targetFile.path);
+  // }
 
   /// Reads a JSON file.
   static Map<String, dynamic> readJson(File json) {

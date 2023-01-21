@@ -13,7 +13,7 @@ class Stopper {
   static void assertNotStopped() {
     if (_isStopped) {
       _isStopped = false;
-      throw throw NftStopException('Aborting, received stop signal.');
+      throw throw NftStopException('Exiting, received stop signal.');
     }
   }
 

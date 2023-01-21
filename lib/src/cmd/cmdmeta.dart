@@ -30,7 +30,7 @@ class MetaCommand extends Command {
   }
 
   @override
-  void run() async {
+  void run() {
     Directory projectDir = Directory(argResults!["folder"]);
     int size = int.parse(argResults!["size"]);
 
@@ -39,6 +39,6 @@ class MetaCommand extends Command {
 
     final ProjectModel projectJson = ProjectModel.loadFromFolder(projectDir);
 
-    await Nft.generateMeta(projectJson, size);
+    Nft.generateMeta(projectJson, size);
   }
 }

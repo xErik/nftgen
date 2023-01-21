@@ -71,7 +71,7 @@ class DemoCommand extends Command {
 
       await meta(projectDir.path, size);
       await rarity(projectDir.path);
-      await nft(projectDir.path, size: size);
+      await nft(projectDir.path, size: size, drawServiceBase: drawService);
 
       StreamPrint.prn("Demo finished with size: $size");
     } on NftException catch (e) {

@@ -110,7 +110,7 @@ class Project {
 
     if (cidReplace == cidSearch) {
       StreamPrint.prn(
-          "Aborting, search equals replace: $cidSearch == $cidReplace ");
+          "Exiting, search equals replace: $cidSearch == $cidReplace ");
       return;
     }
 

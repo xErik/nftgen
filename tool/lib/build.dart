@@ -11,7 +11,7 @@ void main(List<String> args) async {
       .then((ProcessResult pr) {
     // print(pr.exitCode);
     // print(pr.stdout);
-    print(pr.stderr);
+    stderr.writeln(pr.stderr);
   });
 
   stdout.writeln('Copying release EXE to bin...');

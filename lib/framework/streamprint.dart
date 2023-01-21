@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 enum PrintType { ok, warn, error, progress }
 
@@ -33,17 +34,20 @@ class StreamPrint {
   /// Adds an OK message.
   static void prn(String str) {
     _controller.add(PrintContent(str));
-    print(str);
+    stdout.writeln(str);
   }
 
   /// Adds an error message.
   static void err(String str) {
     _controller.add(PrintContent(str, PrintType.error));
+    // print(str);
+    stderr.writeln(str);
   }
 
   /// Adds a warning message.
   static void warn(String str) {
     _controller.add(PrintContent(str, PrintType.warn));
-    print(str);
+    // print(str);
+    stdout.writeln(str);
   }
 }

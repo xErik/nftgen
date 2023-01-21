@@ -22,7 +22,7 @@ import 'package:image/image.dart' as ig;
 class Nft {
   /// Generates metadata based on a config file and
   /// a directory for metadata output.
-  static Future<void> generateMeta(ProjectModel projectModel, int size) async {
+  static void generateMeta(ProjectModel projectModel, int size) {
     final eta = Eta()..start();
     final rnd = Random.secure();
     final cache = CacheLayerFileWeights(rnd);
@@ -93,10 +93,13 @@ class Nft {
 
       final fileMeta =
           normalize('${metaDir.path}${Platform.pathSeparator}$nftId.json');
+
       Io.writeJson(File(fileMeta), generated[nftId]!);
 
-      eta.write(
-          nftId, generateNfts, '$fileMeta DUBS: ${humanizeInt(doubletCount)}');
+      if (nftId == 1 || nftId == generateNfts || nftId % 100 == 0) {
+        eta.write(nftId, generateNfts,
+            '$fileMeta DUBS: ${humanizeInt(doubletCount)}');
+      }
     }
   }
 
@@ -146,48 +149,6 @@ class Nft {
             cacheFile.getFile(nftType, nftValue, layersDir.path, confLayers));
       }
 
-      // -----------------------------------------------------
-      // IMAGE
-      // -----------------------------------------------------
-
-      // for (var imageFile in imageFiles) {
-      //   Stopper.assertNotStopped(StopCommand.nft);
-      //   ig.compositeImage(canvas, (await ig.decodeImageFile(imageFile.path))!);
-      //   // ig.compositeImage(canvas, await cacheImage.getImage(imageFile));
-      // }
-
-      // var fileImage = '${imagesDir.path}${Platform.pathSeparator}$nftId.png';
-      // File(fileImage).writeAsBytesSync(ig.encodePng(canvas));
-
-// ----------------------------------
-
-      // final recorder = ui.PictureRecorder();
-      // final canvas = Canvas(
-      //     recorder,
-      //     Rect.fromPoints(
-      //         Offset(0.0, 0.0),
-      //         Offset(nftSize["width"]!.toDouble(),
-      //             nftSize["height"]!.toDouble())));
-
-      // for (var imageFile in imageFiles) {
-      //   Stopper.assertNotStopped();
-      //   // final img = await cacheImage.getImage(imageFile);
-
-      //   var codec = await ui.instantiateImageCodec(imageFile.readAsBytesSync());
-      //   var frame = await codec.getNextFrame();
-      //   final img = frame.image;
-      //   canvas.drawImage(img, Offset(0, 0), Paint());
-      // }
-
-      // final picture = recorder.endRecording();
-
-      // ui.Image img =
-      //     await picture.toImage(nftSize["width"]!, nftSize["height"]!);
-      // final ByteData? pngBytes =
-      //     await img.toByteData(format: ui.ImageByteFormat.png);
-
-// ----------------------------------
-
       final fileImage = '${imagesDir.path}${Platform.pathSeparator}$nftId.png';
       final pngBytes = await canvasService.draw(
           nftSize["width"]!, nftSize["height"]!, imageFiles);
@@ -202,23 +163,10 @@ class Nft {
     }
   }
 
-  // static Future<ui.Image> _loadImage(File image, CacheImage cacheImage) async {
-  //   final bytes = await cacheImage.getImage(imageFile);
-  //   var codec = await ui.instantiateImageCodec(image.readAsBytesSync());
-  //   var frame = await codec.getNextFrame();
-  //   return frame.image;
-  // }
-
   /// Returns the width and height of the first image found in `layersDir`:
   /// `{"width": <WIDTH>, "height": <HEIGHT>}`
   static Future<Map<String, int>> getImageSize(Directory layersDir) async {
-    // final layers = layersDir.listSync();
-    // if(layers)
-    print(layersDir.path);
-
     final path = Directory(layersDir.listSync()[0].path).listSync()[0].path;
-
-    // final path = Directory(layersDir.listSync()[0].path).listSync()[0].path;
     final image = await ig.decodePngFile(path);
     return {"width": image!.width, "height": image.height};
   }
