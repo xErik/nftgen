@@ -145,9 +145,9 @@ class ProjectModel {
     );
   }
 
-  void saveToFolder(Directory projectDir) {
+  Future saveToFolder(Directory projectDir) async {
     final projectFile = Io.getProject(projectDir);
-    Io.writeJson(projectFile, toJson());
+    await Io.writeJson(projectFile, toJson());
   }
 
   /// Returns empty model.

@@ -32,7 +32,7 @@ class CidCommand extends Command {
   }
 
   @override
-  void run() {
+  Future run() async {
     final Directory projectDir = Directory(argResults!["folder"]);
     final File projectFile = Io.getProject(projectDir);
     final ProjectModel projectJson = ProjectModel.loadFromFolder(projectDir);
@@ -40,7 +40,7 @@ class CidCommand extends Command {
 
     Io.assertExistsFolder(projectJson.metaDir);
 
-    Project.updateCidMetadata(projectDir,
+    await Project.updateCidMetadata(projectDir,
         cidReplace: cidReplace, cidSearch: projectJson.cidCode);
 
     StreamPrint.prn("Updated CID: ${projectFile.path}");

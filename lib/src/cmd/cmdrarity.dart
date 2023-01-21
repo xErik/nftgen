@@ -30,7 +30,7 @@ class RarityCommand extends Command {
   }
 
   @override
-  void run() async {
+  Future run() async {
     Directory projectDir = Directory(argResults!["folder"]);
     final bool doCharts = argResults!["charts"];
     final ProjectModel projectJson = ProjectModel.loadFromFolder(projectDir);

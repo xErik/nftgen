@@ -49,7 +49,7 @@ class InitCommand extends Command {
   }
 
   @override
-  void run() {
+  Future run() async {
     final Directory projectDir = Directory(argResults!["folder"]);
     final File projectFile = Io.getProject(projectDir);
 
@@ -67,7 +67,7 @@ class InitCommand extends Command {
       }
     }
 
-    Project.generate(name, projectDir, layerDir,
+    await Project.generate(name, projectDir, layerDir,
         factorWeights: factorWeights, factorLayers: factorLayers);
 
     StreamPrint.prn("Created: ${projectFile.path}");

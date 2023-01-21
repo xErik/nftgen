@@ -19,11 +19,11 @@ class Project {
   /// between 1...MAX. The default weight factor is `3.0`, use `0.0` for equal
   /// distribution of all images belonging to a layer with a weight of `1` for
   /// each image in a layer.
-  static ProjectModel generate(
+  static Future<ProjectModel> generate(
       String name, Directory projectDir, Directory layerDir,
       {double factorWeights = 3.0,
       double factorMaxNft = 0.6,
-      double factorLayers = 0.5}) {
+      double factorLayers = 0.5}) async {
     int generateNfts = 0;
     final List<ProjectLayerModel> layerEntries = [];
 
@@ -64,7 +64,7 @@ class Project {
     final projectModel =
         ProjectModel.init(name, generateNfts, layerEntries, layerDir);
 
-    projectModel.saveToFolder(projectDir);
+    await projectModel.saveToFolder(projectDir);
 
     return projectModel;
   }
@@ -97,8 +97,8 @@ class Project {
 
   /// Reads the `cid` code from the config and writes it to all
   /// files in the metadata directory.
-  static void updateCidMetadata(Directory projectDir,
-      {required String cidReplace, required String cidSearch}) {
+  static Future updateCidMetadata(Directory projectDir,
+      {required String cidReplace, required String cidSearch}) async {
     // final config = Io.readJson(configFile);
 
     final ProjectModel model = ProjectModel.loadFromFolder(projectDir);
@@ -118,7 +118,7 @@ class Project {
 
     if (model.cidCode != cidReplace) {
       model.cidCode = cidReplace;
-      model.saveToFolder(projectDir);
+      await model.saveToFolder(projectDir);
     }
 
     final entries = metaDir.listSync();
@@ -129,7 +129,7 @@ class Project {
       final json = Io.readJson(file);
       json['image'] =
           json['image']!.toString().replaceAll(cidSearch, cidReplace);
-      Io.writeJson(file, json);
+      await Io.writeJson(file, json);
     }
   }
 }

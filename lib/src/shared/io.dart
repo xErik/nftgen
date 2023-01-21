@@ -51,30 +51,13 @@ class Io {
     throw val.toString();
   });
 
-  static void writeJson(File targetFile, Map<String, dynamic> config) {
+  /// This HAS to be async all the way up or the UI will block!
+  /// Do NOT change.
+  static Future writeJson(File targetFile, Map<String, dynamic> config) async {
     String prettyprint = encoder.convert(config);
-    targetFile.parent.createSync(recursive: true);
-    targetFile.writeAsStringSync(prettyprint);
+    await targetFile.parent.create(recursive: true);
+    await targetFile.writeAsString(prettyprint);
   }
-
-  /// Write a JSON file.
-  // static Future writeJson(File targetFile, Map<String, dynamic> config) async {
-  //   final ReceivePort receivePort = ReceivePort();
-  //   final obj = CustomObject(targetFile, config, receivePort.sendPort);
-  //   await Isolate.spawn(_writeJson, obj);
-  //   await receivePort.first;
-  // }
-
-  // static void _writeJson(CustomObject obj) async {
-  //   final targetFile = obj.file;
-  //   final config = obj.config;
-
-  //   String prettyprint = encoder.convert(config);
-  //   await targetFile.parent.create(recursive: true);
-  //   await targetFile.writeAsString(prettyprint);
-
-  //   obj.sendPort.send(targetFile.path);
-  // }
 
   /// Reads a JSON file.
   static Map<String, dynamic> readJson(File json) {

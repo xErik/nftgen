@@ -22,7 +22,7 @@ import 'package:image/image.dart' as ig;
 class Nft {
   /// Generates metadata based on a config file and
   /// a directory for metadata output.
-  static void generateMeta(ProjectModel projectModel, int size) {
+  static Future generateMeta(ProjectModel projectModel, int size) async {
     final eta = Eta()..start();
     final rnd = Random.secure();
     final cache = CacheLayerFileWeights(rnd);
@@ -94,7 +94,7 @@ class Nft {
       final fileMeta =
           normalize('${metaDir.path}${Platform.pathSeparator}$nftId.json');
 
-      Io.writeJson(File(fileMeta), generated[nftId]!);
+      await Io.writeJson(File(fileMeta), generated[nftId]!);
 
       if (nftId == 1 || nftId == generateNfts || nftId % 100 == 0) {
         eta.write(nftId, generateNfts,
