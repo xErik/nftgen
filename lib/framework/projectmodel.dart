@@ -89,13 +89,13 @@ class ProjectModel {
   }
 
   /// throws NftCliException if false.
-  static ProjectModel loadFromFolder(Directory projectDir) {
+  static Future<ProjectModel> loadFromFolder(Directory projectDir) async {
     final projectFile =
         File('${projectDir.path}${Platform.pathSeparator}${Io.projectJson}');
 
     Io.assertExistsFile(projectFile);
 
-    Map<String, dynamic> projectJson = Io.readJson(projectFile);
+    Map<String, dynamic> projectJson = await Io.readJson(projectFile);
 
     return fromJson(projectJson, projectDir);
   }

@@ -39,7 +39,7 @@ class NftCommand extends Command {
 
     Io.assertExistsFile(projectFile);
 
-    final ProjectModel model = ProjectModel.loadFromFolder(projectDir);
+    final ProjectModel model = await ProjectModel.loadFromFolder(projectDir);
 
     Io.assertExistsFolder(model.metaDir);
     Io.assertExistsFolder(model.layerDir);

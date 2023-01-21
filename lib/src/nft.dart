@@ -116,7 +116,7 @@ class Nft {
       [DrawBase? drawService]) async {
     final eta = Eta()..start();
     final sep = Platform.pathSeparator;
-    final ProjectModel model = ProjectModel.loadFromFolder(projectDir);
+    final ProjectModel model = await ProjectModel.loadFromFolder(projectDir);
     final confLayers = model.layers;
     final canvasService = drawService ?? DrawDart();
 
@@ -138,8 +138,8 @@ class Nft {
       Stopper.assertNotStopped();
       imageFiles.clear();
 
-      final metaJson =
-          Io.readJson(File('${metaDir.path + sep + nftId.toString()}.json'));
+      final metaJson = await Io.readJson(
+          File('${metaDir.path + sep + nftId.toString()}.json'));
 
       for (var attribute in metaJson['attributes']) {
         final String nftType = attribute['trait_type'];

@@ -60,8 +60,8 @@ class Io {
   }
 
   /// Reads a JSON file.
-  static Map<String, dynamic> readJson(File json) {
-    final input = json.readAsStringSync();
+  static Future<Map<String, dynamic>> readJson(File json) async {
+    final input = await json.readAsString();
     return jsonDecode(input);
   }
 

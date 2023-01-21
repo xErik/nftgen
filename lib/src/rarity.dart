@@ -15,14 +15,15 @@ class Rarity {
   ///
   /// The value is the percentage of NFTs an attribute appears in.
   /// A low value indicates high rarity of an attribute.
-  static List<MapEntry<String, double>> layers(Directory metaDir) {
+  static Future<List<MapEntry<String, double>>> layers(
+      Directory metaDir) async {
     final Map<String, int> attributeCountAbsolute = {};
     final Map<String, double> attributeCountPercentage = {};
     final metasFiles = Io.getJsonFiles(metaDir);
 
     for (var meta in metasFiles) {
       Stopper.assertNotStopped();
-      final metaJson = Io.readJson(File(meta.path));
+      final metaJson = await Io.readJson(File(meta.path));
       final List<dynamic> atts = metaJson['attributes'];
 
       for (var att in atts) {
@@ -58,7 +59,7 @@ class Rarity {
   ///
   /// [Rarity Score for a Trait Value] = 1 / ([Number of Items with that Trait Value] / [Total Number of Items in Collection])
   /// The total Rarity Score for an NFT is the sum of the Rarity Score of all of it’s trait values.
-  static List<MapEntry<String, double>> nfts(Directory metaDir) {
+  static Future<List<MapEntry<String, double>>> nfts(Directory metaDir) async {
     final eta = Eta()..start();
     final Map<String, int> attributeCountAbsolute = {};
     final Map<String, double> attributeCountPercentage = {};
@@ -68,7 +69,7 @@ class Rarity {
       Stopper.assertNotStopped();
 
       final meta = metas.elementAt(i);
-      final js = Io.readJson(File(meta.path));
+      final js = await Io.readJson(File(meta.path));
       final List<dynamic> atts = js['attributes'];
 
       for (var att in atts) {
@@ -81,7 +82,10 @@ class Rarity {
         attributeCountAbsolute.putIfAbsent(keyVal, () => 0);
         attributeCountAbsolute[keyVal] = attributeCountAbsolute[keyVal]! + 1;
       }
-      eta.write(i + 1, metas.length * 2, '');
+
+      if (i + 1 == 1 || i == metas.length - 1 || (i + 1) % 100 == 0) {
+        eta.write(i + 1, metas.length * 2, '');
+      }
     }
 
     for (var entry in attributeCountAbsolute.entries) {
@@ -95,7 +99,7 @@ class Rarity {
       Stopper.assertNotStopped();
 
       final meta = metas.elementAt(i);
-      final js = Io.readJson(File(meta.path));
+      final js = await Io.readJson(File(meta.path));
       final List<dynamic> atts = js['attributes'];
 
       var rarity = 0.0;
@@ -117,7 +121,9 @@ class Rarity {
 
       items[meta.path] = rarity;
 
-      eta.write(i + 1, metas.length * 2, '');
+      if (i + 1 == 1 || i == metas.length - 1 || (i + 1) % 100 == 0) {
+        eta.write(i + 1, metas.length * 2, '');
+      }
     }
 
     final sortedEntries = items.entries.toList()

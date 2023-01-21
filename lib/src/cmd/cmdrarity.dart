@@ -33,13 +33,15 @@ class RarityCommand extends Command {
   Future run() async {
     Directory projectDir = Directory(argResults!["folder"]);
     final bool doCharts = argResults!["charts"];
-    final ProjectModel projectJson = ProjectModel.loadFromFolder(projectDir);
+    final ProjectModel projectJson =
+        await ProjectModel.loadFromFolder(projectDir);
 
     Io.assertExistsFolder(projectJson.metaDir);
 
-    List<MapEntry<String, double>> sortedNft = Rarity.nfts(projectJson.metaDir);
+    List<MapEntry<String, double>> sortedNft =
+        await Rarity.nfts(projectJson.metaDir);
     List<MapEntry<String, double>> sortedAttr =
-        Rarity.layers(projectJson.metaDir);
+        await Rarity.layers(projectJson.metaDir);
 
     Io.writeCsv(sortedNft, projectJson.rarityNftCsv);
     Io.writeCsv(sortedAttr, projectJson.rarityLayersCsv);

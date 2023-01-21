@@ -35,7 +35,8 @@ class CidCommand extends Command {
   Future run() async {
     final Directory projectDir = Directory(argResults!["folder"]);
     final File projectFile = Io.getProject(projectDir);
-    final ProjectModel projectJson = ProjectModel.loadFromFolder(projectDir);
+    final ProjectModel projectJson =
+        await ProjectModel.loadFromFolder(projectDir);
     final String cidReplace = argResults!["cid"];
 
     Io.assertExistsFolder(projectJson.metaDir);

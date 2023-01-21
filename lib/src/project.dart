@@ -34,7 +34,8 @@ class Project {
     for (var dirIndex = 0; dirIndex < layerDirs.length; dirIndex++) {
       final singleLayerDir = layerDirs.elementAt(dirIndex);
 
-      final layerName = basename(singleLayerDir.path);
+      final layerName =
+          basename(singleLayerDir.path).replaceAll(RegExp(r'^\d+\. *'), '');
       final Map<String, int> weights = {};
 
       // WEIGHTS
@@ -101,7 +102,7 @@ class Project {
       {required String cidReplace, required String cidSearch}) async {
     // final config = Io.readJson(configFile);
 
-    final ProjectModel model = ProjectModel.loadFromFolder(projectDir);
+    final ProjectModel model = await ProjectModel.loadFromFolder(projectDir);
     // final File configFile = Io.getProject(projectDir);
     final Directory metaDir = model.metaDir;
 
@@ -126,7 +127,7 @@ class Project {
     for (var entry in entries) {
       Stopper.assertNotStopped();
       final file = File(entry.path);
-      final json = Io.readJson(file);
+      final json = await Io.readJson(file);
       json['image'] =
           json['image']!.toString().replaceAll(cidSearch, cidReplace);
       await Io.writeJson(file, json);

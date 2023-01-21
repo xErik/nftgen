@@ -37,7 +37,8 @@ class MetaCommand extends Command {
     File projectFile = Io.getProject(projectDir);
     Io.assertExistsFile(projectFile);
 
-    final ProjectModel projectJson = ProjectModel.loadFromFolder(projectDir);
+    final ProjectModel projectJson =
+        await ProjectModel.loadFromFolder(projectDir);
 
     await Nft.generateMeta(projectJson, size);
   }
