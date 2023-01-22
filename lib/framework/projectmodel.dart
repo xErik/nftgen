@@ -14,6 +14,10 @@ class ProjectLayerModel {
   /// Constructor.
   ProjectLayerModel(this.name, this.directory, this.probability, this.weights);
 
+  ProjectLayerModel.empty() : this("", Directory(''), 0.0, {});
+
+  bool isEmpty() => name.isEmpty;
+
   // Returns model map representing JSON.
   Map<String, dynamic> toJson() {
     return {

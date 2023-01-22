@@ -6,6 +6,7 @@ import 'package:nftgen/src/shared/io.dart';
 import 'package:nftgen/framework/projectmodel.dart';
 import 'package:nftgen/framework/streamprint.dart';
 import 'package:path/path.dart';
+import 'package:collection/collection.dart';
 
 /// Generates a config file to generate NFTs.
 class Project {
@@ -27,22 +28,26 @@ class Project {
     int generateNfts = 0;
     final List<ProjectLayerModel> layerEntries = [];
 
-    final layerDirs = layerDir.listSync().whereType<Directory>();
+    final layerDirs = layerDir.listSync().whereType<Directory>().toList();
+    layerDirs.sort(((a, b) => compareNatural(a.path, b.path)));
 
     final layerProbs = _probs(layerDirs.length, factorLayers);
 
     for (var dirIndex = 0; dirIndex < layerDirs.length; dirIndex++) {
       final singleLayerDir = layerDirs.elementAt(dirIndex);
 
-      final layerName =
-          basename(singleLayerDir.path).replaceAll(RegExp(r'^\d+\. *'), '');
+      final layerDirName = basename(singleLayerDir.path);
+      final layerName = layerDirName.replaceAll(RegExp(r'^\d+\. *'), '');
       final Map<String, int> weights = {};
 
       // WEIGHTS
 
-      final entries = Directory(singleLayerDir.path).listSync();
-      for (var i = 1; i <= entries.length; i++) {
-        final FileSystemEntity layerFile = entries.elementAt(i - 1);
+      final layerDirEntries =
+          Directory(singleLayerDir.path).listSync().whereType<File>().toList();
+      layerDirEntries.sort(((a, b) => compareNatural(a.path, b.path)));
+
+      for (var i = 1; i <= layerDirEntries.length; i++) {
+        final FileSystemEntity layerFile = layerDirEntries.elementAt(i - 1);
         final String layerEntity = basename(layerFile.path);
         final int layerWeight = _weight(i, factorWeights);
         weights.addAll({layerEntity: layerWeight});
@@ -50,11 +55,12 @@ class Project {
 
       // GENERATE NFTs
 
-      generateNfts =
-          generateNfts == 0 ? entries.length : generateNfts * entries.length;
+      generateNfts = generateNfts == 0
+          ? layerDirEntries.length
+          : generateNfts * layerDirEntries.length;
       // LAYER
 
-      layerEntries.add(ProjectLayerModel(layerName, Directory(layerName),
+      layerEntries.add(ProjectLayerModel(layerName, Directory(layerDirName),
           layerProbs.elementAt(dirIndex), weights));
     }
 
