@@ -10,6 +10,7 @@ milena/
 build/
 project/image/
 project/meta/
+project/layer_crunched/
 project/rarity/
 project/project.json
 bla/

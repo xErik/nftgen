@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:args/command_runner.dart';
 import 'package:nftgen/framework/drawbase.dart';
 import 'package:nftgen/framework/nftcliexception.dart';
+import 'package:nftgen/src/cmd/cmdcrunch.dart';
 import 'package:nftgen/src/cmd/cmddemo.dart';
 import 'package:nftgen/src/shared/stopper.dart';
 
@@ -85,6 +86,7 @@ Future<dynamic> main(List<String> args, [DrawBase? drawService]) async {
     ..addCommand(MetaCommand())
     ..addCommand(RarityCommand())
     ..addCommand(CidCommand())
+    ..addCommand(CrunchCommand())
     ..addCommand(NftCommand(drawService));
   try {
     await runner.run(args);

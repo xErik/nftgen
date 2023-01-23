@@ -37,6 +37,12 @@ class StreamPrint {
     stdout.writeln(str);
   }
 
+  /// Adds an progress message.
+  static void progress(String str) {
+    _controller.add(PrintContent(str, PrintType.progress));
+    stdout.writeln(str);
+  }
+
   /// Adds an error message.
   static void err(String str) {
     _controller.add(PrintContent(str, PrintType.error));
