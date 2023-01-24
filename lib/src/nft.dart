@@ -180,7 +180,6 @@ class Nft {
     // writePool.stop();
     // }
     await Future.wait(waitList);
-    // print("DONE");
     writePool.stop();
   }
 

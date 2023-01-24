@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:args/command_runner.dart';
 import 'package:nftgen/framework/drawbase.dart';
+import 'package:nftgen/framework/nftcliexception.dart';
 import 'package:nftgen/framework/projectmodel.dart';
 import 'package:nftgen/main.dart';
 import 'package:nftgen/src/shared/io.dart';
@@ -64,9 +65,10 @@ class NftCommand extends Command {
 
     // try {
     //   await crunch(projectDir.path, overwrite: isForceRecrunch);
-    // } catch (e) {}
+    // } on NftCliException catch (e) {
+    //   // in case
+    // }
     await Nft.generateNft(projectDir, size, model.layerCrunchDir,
         model.imageDir, model.metaDir, drawService, isWriteJpg, jpgQuality);
-    // exit(0);
   }
 }

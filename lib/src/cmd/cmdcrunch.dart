@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:args/command_runner.dart';
 import 'package:io/io.dart';
 import 'package:nftgen/framework/nftcliexception.dart';
+import 'package:nftgen/src/shared/pngquant.dart';
 import 'package:nftgen/src/shared/eta.dart';
 import 'package:nftgen/src/shared/io.dart';
 import 'package:nftgen/framework/projectmodel.dart';
@@ -44,12 +45,12 @@ class CrunchCommand extends Command {
     final ProjectModel projectModel =
         await ProjectModel.loadFromFolder(projectDir);
     final List<Directory> work = [];
-    final quantExe = File('.\\bin\\pngquant\\pngquant.exe');
+    final quantExe = PngQuant.exePath;
 
-    if (quantExe.existsSync() == false) {
-      throw NftFileNotFoundException(
-          'pnqquant.exe not found: ${quantExe.path}');
-    }
+    // if (quantExe.existsSync() == false) {
+    //   throw NftFileNotFoundException(
+    //       'pnqquant.exe not found: ${quantExe.path}');
+    // }
 
     if (crunchQuality < 1 || crunchQuality > 11) {
       throw 'Crunch quality -q must be between 1 and 11.';
