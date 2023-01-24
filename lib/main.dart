@@ -117,6 +117,9 @@ Future<dynamic> main(List<String> args, [DrawBase? drawService]) async {
     ..addCommand(NftCommand(drawService));
   try {
     await runner.run(args);
+    if (args.contains("--no-kill") == false) {
+      exit(0);
+    }
   } catch (error, stack) {
     if (error is NftException) {
       stderr.writeln(error.message);
