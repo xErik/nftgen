@@ -1,0 +1,33 @@
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:filesize/filesize.dart';
+import 'package:image/image.dart';
+import 'package:isolate_pool_2/isolate_pool_2.dart';
+import 'package:nftgen/src/shared/eta.dart';
+
+class WriteImage extends PooledJob {
+  final Eta eta;
+  final int nftId;
+  final int confGenerateNfts;
+  final Uint8List pngBytes;
+  final File file;
+  final int jpgQuality;
+  final String returnMessage;
+
+  WriteImage(this.eta, this.nftId, this.confGenerateNfts, this.pngBytes,
+      this.file, this.jpgQuality, this.returnMessage);
+
+  @override
+  Future job() async {
+    // print("Write ${file.path}");
+    if (file.path.endsWith('.jpg')) {
+      final jpg = decodePng(pngBytes)!;
+      await file.writeAsBytes(encodeJpg(jpg, quality: jpgQuality));
+    } else {
+      await file.writeAsBytes(pngBytes);
+    }
+    eta.write(nftId, confGenerateNfts,
+        '${file.path} ${filesize(file.statSync().size)}');
+  }
+}

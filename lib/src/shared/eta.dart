@@ -2,14 +2,17 @@ import 'package:duration/duration.dart';
 import 'package:nftgen/framework/streamprint.dart';
 
 class Eta {
-  late final DateTime _s0;
+  DateTime _s0 = DateTime.now();
   DateTime _s0Last = DateTime.now();
   final List<int> _durationsEta = [];
 
-  void start() {
-    _s0 = DateTime.now();
-    _s0Last = DateTime.now();
+  Eta([DateTime? start]) {
+    if (start != null) {
+      _s0 = start;
+    }
   }
+
+  get start => _s0;
 
   void write(int index, int max, String message) {
     if (index == 0) {
@@ -40,6 +43,7 @@ class Eta {
     durationEta = Duration(
         seconds: _durationsEta.reduce((sum, element) => sum + element) ~/
             _durationsEta.length);
+
     if (_durationsEta.length > 5) {
       _durationsEta.removeAt(0);
     }
@@ -67,6 +71,6 @@ class Eta {
     final out =
         '$idxStr / $max $message TOOK: $tookStr SINCE: $sinceStr ETA: $etaStr';
 
-    StreamPrint.prn(out);
+    StreamPrint.progress(out);
   }
 }

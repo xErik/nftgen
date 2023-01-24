@@ -49,9 +49,19 @@ Future<dynamic> cid(String projectDir, String cid) async =>
 
 /// Runs NFT image generation based on metadata
 Future<dynamic> nft(String projectDir,
-        {int size = -1, DrawBase? drawServiceBase}) async =>
-    await main(["nft", "-f", projectDir, '-s', size.toString(), "--no-kill"],
-        drawServiceBase);
+        {int size = -1,
+        DrawBase? drawServiceBase,
+        bool crunchLayersForces = false}) async =>
+    await main([
+      "nft",
+      "-f",
+      projectDir,
+      '-s',
+      size.toString(),
+      "--crunch-layers-forced",
+      crunchLayersForces.toString(),
+      "--no-kill"
+    ], drawServiceBase);
 
 /// Runs NFT image generation based on metadata
 Future<dynamic> demo(String projectDir, String layerDir, String name,
@@ -70,6 +80,23 @@ Future<dynamic> demo(String projectDir, String layerDir, String name,
       "-s",
       size.toString()
     ], drawServiceBase);
+
+/// Runs NFT image generation based on metadata
+Future<dynamic> crunch(String projectDir,
+    {int quality = 11, bool overwrite = false}) async {
+  final or = (overwrite == true) ? "--overwrite" : "--no-overwrite";
+
+  await main([
+    "crunch",
+    "-f",
+    projectDir,
+    '-q',
+    quality.toString(),
+    '-o',
+    or,
+    "--no-kill"
+  ]);
+}
 
 /// Stops the specific command.
 void stop() => Stopper.stop();
@@ -95,19 +122,12 @@ Future<dynamic> main(List<String> args, [DrawBase? drawService]) async {
       stderr.writeln(error.message);
     } else {
       stderr.writeln(error);
+      stderr.writeln(stack);
     }
     // EXIT if on pure CLI
     if (args.contains("--no-kill") == false) {
-      if (error is! UsageException) {
-        stdout.writeln("Exiting.");
-      }
       exit(64); // Exit code 64 indicates a usage error.
-    } else {
-      stderr.writeln(stack);
     }
-    // This will throw CliException in case am expected
-    // DIR is not found etc.
-    // ignore: use_rethrow_when_possible
     if (error is! UsageException) {
       rethrow;
     }

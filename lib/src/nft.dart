@@ -1,12 +1,15 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:humanize_big_int/humanize_big_int.dart';
+import 'package:isolate_pool_2/isolate_pool_2.dart';
 import 'package:nftgen/framework/drawbase.dart';
 import 'package:nftgen/framework/drawdart.dart';
 import 'package:nftgen/framework/projectmodel.dart';
 import 'package:nftgen/framework/streamprint.dart';
+import 'package:nftgen/src/nft/writeimage.dart';
 import 'package:nftgen/src/shared/stopper.dart';
 import 'package:nftgen/src/shared/eta.dart';
 import 'package:path/path.dart';
@@ -23,7 +26,7 @@ class Nft {
   /// Generates metadata based on a config file and
   /// a directory for metadata output.
   static Future generateMeta(ProjectModel projectModel, int size) async {
-    final eta = Eta()..start();
+    final eta = Eta();
     final rnd = Random.secure();
     final cache = CacheLayerFileWeights(rnd);
     final dna = Dna();
@@ -113,12 +116,17 @@ class Nft {
   /// 3. Number specified in `project.json`
   static Future<void> generateNft(Directory projectDir, int size,
       Directory layersDir, Directory imagesDir, Directory metaDir,
-      [DrawBase? drawService]) async {
-    final eta = Eta()..start();
+      [DrawBase? drawService,
+      bool isWriteJpg = true,
+      int jpqQuality = 50]) async {
+    final etaMain = Eta();
     final sep = Platform.pathSeparator;
     final ProjectModel model = await ProjectModel.loadFromFolder(projectDir);
     final confLayers = model.layers;
     final canvasService = drawService ?? DrawDart();
+    final waitList = <Future>[];
+    final writePool = IsolatePool(max(Platform.numberOfProcessors - 2, 2));
+    writePool.start();
 
     StreamPrint.prn('Using draw service: ${canvasService.runtimeType}');
 
@@ -135,6 +143,7 @@ class Nft {
     imagesDir.createSync(recursive: true);
 
     for (var nftId = 1; nftId <= confGenerateNfts; nftId++) {
+      final eta = Eta(etaMain.start);
       Stopper.assertNotStopped();
       imageFiles.clear();
 
@@ -149,18 +158,30 @@ class Nft {
             cacheFile.getFile(nftType, nftValue, layersDir.path, confLayers));
       }
 
-      final fileImage = '${imagesDir.path}${Platform.pathSeparator}$nftId.png';
-      final pngBytes = await canvasService.draw(
+      final file = File(
+          '${imagesDir.path}${Platform.pathSeparator}$nftId.${isWriteJpg ? "jpg" : "png"}');
+      final Uint8List pngBytes = await canvasService.draw(
           nftSize["width"]!, nftSize["height"]!, imageFiles);
 
-      File(fileImage).writeAsBytesSync(pngBytes.buffer.asUint8List());
-
-      // -----------------------------------------------------
-      // PRINT an ETA
-      // -----------------------------------------------------
-
-      eta.write(nftId, confGenerateNfts, fileImage);
+      waitList.add(writePool.scheduleJob(WriteImage(
+          eta,
+          nftId,
+          confGenerateNfts,
+          pngBytes.buffer.asUint8List(),
+          file,
+          jpqQuality,
+          nftId.toString())));
     }
+    // print("Waiting for completers ... }");
+    // if (writePool.numberOfPendingRequests > 0) {
+    // StreamPrint.prn(
+    //     'Waiting for reamining files to be written: ${writePool.jobCompleters.length}');
+    // await Future.wait(writePool.jobCompleters.map((e) => e.future));
+    // writePool.stop();
+    // }
+    await Future.wait(waitList);
+    // print("DONE");
+    writePool.stop();
   }
 
   /// Returns the width and height of the first image found in `layersDir`:

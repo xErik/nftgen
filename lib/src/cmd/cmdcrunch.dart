@@ -1,14 +1,12 @@
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
-import 'package:filesize/filesize.dart';
+import 'package:io/io.dart';
 import 'package:nftgen/framework/nftcliexception.dart';
-import 'package:nftgen/src/project.dart';
 import 'package:nftgen/src/shared/eta.dart';
 import 'package:nftgen/src/shared/io.dart';
 import 'package:nftgen/framework/projectmodel.dart';
 import 'package:nftgen/framework/streamprint.dart';
-import 'package:path/path.dart';
 
 class CrunchCommand extends Command {
   @override
@@ -28,6 +26,8 @@ class CrunchCommand extends Command {
           help: 'The crunch quality',
           valueHelp: 'int between 1 (slow) and 11 (fast)',
           defaultsTo: "4")
+      ..addFlag("overwrite",
+          abbr: "o", defaultsTo: false, help: 'Re-crunch all layer files?')
       ..addFlag("kill",
           abbr: "k",
           defaultsTo: true,
@@ -37,12 +37,13 @@ class CrunchCommand extends Command {
   @override
   Future run() async {
     final sep = Platform.pathSeparator;
-    final eta = Eta()..start();
+    final eta = Eta();
     final Directory projectDir = Directory(argResults!["folder"]);
     final int crunchQuality = int.parse(argResults!["quality"]);
-    final ProjectModel projectJson =
+    final bool isOverwrite = argResults!["overwrite"];
+    final ProjectModel projectModel =
         await ProjectModel.loadFromFolder(projectDir);
-    final List<Map<String, File>> work = [];
+    final List<Directory> work = [];
     final quantExe = File('.\\bin\\pngquant\\pngquant.exe');
 
     if (quantExe.existsSync() == false) {
@@ -54,74 +55,99 @@ class CrunchCommand extends Command {
       throw 'Crunch quality -q must be between 1 and 11.';
     }
 
+    final crunchDir = projectModel.layerCrunchDir;
+
+    if (crunchDir.existsSync()) {
+      if (isOverwrite == true) {
+        StreamPrint.prn('Deleting: ${crunchDir.path}');
+        crunchDir.deleteSync(recursive: true);
+      } else {
+        StreamPrint.warn(
+            'Crunched PNGs exist and overwrite is not specified: -o');
+        throw NftCliException('NO');
+      }
+    }
+
     StreamPrint.prn("Crunching PNGs with quality $crunchQuality (1-11)");
 
-    Io.assertExistsFolder(projectJson.layerDir);
+    Io.assertExistsFolder(projectModel.layerDir);
 
-    final crunchDir = Directory('${projectDir.path}${sep}layer_crunched');
-    if (crunchDir.existsSync()) {
-      crunchDir.deleteSync(recursive: true);
-    }
-
-    projectJson.layerDir.listSync().whereType<Directory>().forEach((dir) {
-      dir
-          .listSync()
-          .where((file) => file.path.endsWith('.png'))
-          .forEach((png) async {
-        final dir =
-            Directory('${crunchDir.path}$sep${basename(png.parent.path)}');
-
-        final out = File('${dir.path}$sep${basename(png.path)}');
-
-        work.add({
-          'png': File(png.path),
-          'out': out,
-        });
-      });
+    projectModel.layerDir.listSync().whereType<Directory>().forEach((dir) {
+      if (dir.path.contains(' ')) {
+        throw NftCliException(
+            'Spaces in folder names NOT allowed: ${dir.path}');
+      }
     });
 
-    final List<int> shrinking = [];
+    StreamPrint.progress('Copying to: ${crunchDir.path}');
+    await copyPath(projectModel.layerDir.path, crunchDir.path);
 
-    for (var i = 0; i < work.length; i++) {
-      final png = work[i]["png"]!;
-      final out = work[i]["out"]!;
+    crunchDir.listSync().whereType<Directory>().forEach((dir) {
+      work.add(Directory(dir.path));
+    });
 
-      // final filePng = File(png);
-      // final fileOut = File(out);
+    final fileCount = crunchDir
+        .listSync(recursive: true)
+        .whereType<File>()
+        .where((element) => element.path.endsWith('.png'))
+        .length;
 
-      out.parent.createSync(recursive: true);
+    final Map<String, List<int>> fileShrink = {};
 
-      await Process.run(
-              quantExe.path,
-              [
-                '--speed',
-                crunchQuality.toString(),
-                '--force',
-                '--skip-if-larger',
-                '--output',
-                out.path,
-                png.path
-              ],
-              runInShell: true)
-          .then((ProcessResult pr) {
-        // print(pr.exitCode);
-        // print(pr.stdout);
-        // stderr.writeln(pr.stderr);
+    StreamPrint.progress('Crunching ...');
+
+    for (Directory dir in work) {
+      dir
+          .listSync()
+          .whereType<File>()
+          .where((element) => element.path.endsWith('.png'))
+          .forEach((png) {
+        final pngSize = png.statSync().size;
+        fileShrink[png.path] = [pngSize];
       });
 
-      final pngSize = png.statSync().size;
-      final outSize = out.statSync().size;
-      final shrinkPerc = ((100 / pngSize) * outSize).toInt();
+      final str = "${dir.path}$sep*.png";
 
-      shrinking.add(shrinkPerc);
+      Process.runSync(
+          quantExe.path,
+          [
+            '--speed',
+            crunchQuality.toString(),
+            '--force',
+            '--skip-if-larger',
+            '--ext',
+            '.png',
+            // '--verbose',
+            // '"${dir.path}$sep*.png"'
+            str
+          ],
+          runInShell: true);
 
-      eta.write(i + 1, work.length,
-          "${basename(png.path)} ${filesize(outSize)} $shrinkPerc %");
+      dir
+          .listSync()
+          .whereType<File>()
+          .where((element) => element.path.endsWith('.png'))
+          .forEach((png) {
+        final pngSize = png.statSync().size;
+        fileShrink[png.path]!.add(pngSize);
+      });
+
+      eta.write(fileShrink.length, fileCount,
+          "Crunch average: ${_avgShrunk(fileShrink)} %");
     }
 
-    final shrunk =
-        shrinking.reduce((sum, val) => sum + val) ~/ shrinking.length;
+    StreamPrint.prn('Crunching done.');
+  }
 
-    StreamPrint.prn("Crunched PNGs with average of $shrunk %");
+  _avgShrunk(Map<String, List<int>> fileShrink) {
+    List<int> shrinking = [];
+
+    for (List<int> vals in fileShrink.values) {
+      final shrinkPerc =
+          ((100 / vals.elementAt(0)) * vals.elementAt(1)).toInt();
+      shrinking.add(shrinkPerc);
+    }
+
+    return shrinking.reduce((sum, val) => sum + val) ~/ fileShrink.length;
   }
 }

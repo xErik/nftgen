@@ -14,7 +14,7 @@ void main(List<String> args) async {
     stderr.writeln(pr.stderr);
   });
 
-  stdout.writeln('Copying release EXE to bin...');
+  // stdout.writeln('Copying release EXE to bin...');
   final to = Directory('.${sep}bin$sep');
   to.createSync(recursive: true);
   copyPathSync(

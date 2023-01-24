@@ -37,7 +37,7 @@ class Project {
       final singleLayerDir = layerDirs.elementAt(dirIndex);
 
       final layerDirName = basename(singleLayerDir.path);
-      final layerName = layerDirName.replaceAll(RegExp(r'^\d+\. *'), '');
+      final layerName = layerDirName.replaceAll(RegExp(r'^\d+\.? *'), '');
       final Map<String, int> weights = {};
 
       // WEIGHTS

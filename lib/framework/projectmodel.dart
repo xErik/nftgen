@@ -45,6 +45,7 @@ class ProjectModel {
   int generateNfts;
   List<ProjectLayerModel> layers;
   Directory layerDir;
+  Directory layerCrunchDir;
   final Directory metaDir;
   final Directory imageDir;
   final Directory rarityDir;
@@ -63,6 +64,7 @@ class ProjectModel {
       //
       this.metaDir,
       this.layerDir,
+      this.layerCrunchDir,
       this.imageDir,
       this.rarityDir,
       this.rarityNftCsv,
@@ -83,6 +85,7 @@ class ProjectModel {
       projectLayers,
       Directory("meta"),
       Directory(normalize(layersDir.absolute.path)),
+      Directory("layer_crunched"),
       Directory("image"),
       Directory("rarity"),
       File("rarity_nft.csv"),
@@ -124,6 +127,7 @@ class ProjectModel {
       //
       Directory(projectDir.path + Io.sep + projectJson['metaDir']),
       Directory(projectJson['layerDir']), // NOT IN PROJECT!
+      Directory(projectDir.path + Io.sep + projectJson['layerCrunchDir']),
       Directory(projectDir.path + Io.sep + projectJson['imageDir']),
       Directory(projectDir.path + Io.sep + projectJson['rarityDir']),
       File(projectDir.path +
@@ -156,8 +160,21 @@ class ProjectModel {
 
   /// Returns empty model.
   static ProjectModel empty() {
-    return ProjectModel('', '', 0, [], Directory(''), Directory(''),
-        Directory(''), Directory(''), File(''), File(''), File(''), File(''));
+    return ProjectModel(
+      '',
+      '',
+      0,
+      [],
+      Directory(''),
+      Directory(''),
+      Directory(''),
+      Directory(''),
+      Directory(''),
+      File(''),
+      File(''),
+      File(''),
+      File(''),
+    );
   }
 
   /// Returns whether this model is empty by testing emptiness of `name`.
@@ -188,6 +205,7 @@ class ProjectModel {
       //
       "metaDir": basename(metaDir.path),
       "layerDir": layerDir.path, // NOT IN PROJECT!
+      "layerCrunchDir": basename(layerCrunchDir.path),
       "imageDir": basename(imageDir.path),
       "rarityDir": basename(rarityDir.path),
       "rarityNftCsv": basename(rarityNftCsv.path),

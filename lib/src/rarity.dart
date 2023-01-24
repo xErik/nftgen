@@ -60,7 +60,7 @@ class Rarity {
   /// [Rarity Score for a Trait Value] = 1 / ([Number of Items with that Trait Value] / [Total Number of Items in Collection])
   /// The total Rarity Score for an NFT is the sum of the Rarity Score of all of it’s trait values.
   static Future<List<MapEntry<String, double>>> nfts(Directory metaDir) async {
-    final eta = Eta()..start();
+    final eta = Eta();
     final Map<String, int> attributeCountAbsolute = {};
     final Map<String, double> attributeCountPercentage = {};
     final metas = Io.getJsonFiles(metaDir);
