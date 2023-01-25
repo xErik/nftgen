@@ -28,3 +28,4 @@ dependencies:
   flutter_isolate: ^2.0.4
   filesize: ^2.0.1
   isolate_pool_2: ^1.0.2
+  universal_disk_space: ^0.2.3

@@ -11,6 +11,10 @@ class NftCliException extends NftException {
   NftCliException(String message) : super(message);
 }
 
+class NftNotEnoughFreespaceException extends NftException {
+  NftNotEnoughFreespaceException(String message) : super(message);
+}
+
 class NftStopException extends NftException {
   NftStopException(String message) : super(message);
 }
