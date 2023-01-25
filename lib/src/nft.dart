@@ -172,13 +172,6 @@ class Nft {
           jpqQuality,
           nftId.toString())));
     }
-    // print("Waiting for completers ... }");
-    // if (writePool.numberOfPendingRequests > 0) {
-    // StreamPrint.prn(
-    //     'Waiting for reamining files to be written: ${writePool.jobCompleters.length}');
-    // await Future.wait(writePool.jobCompleters.map((e) => e.future));
-    // writePool.stop();
-    // }
     await Future.wait(waitList);
     writePool.stop();
   }

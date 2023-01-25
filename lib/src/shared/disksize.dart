@@ -72,8 +72,10 @@ class DiskSize {
 
       if (isFatal == true) {
         StreamPrint.err(_message(maxFileCount, "FATAL"));
+        final needed = filesize(_spaceUsedExpectedBytes);
+
         throw NftNotEnoughFreespaceException(
-            'Not enough file space for all NFTs. ${_message(maxFileCount)}');
+            'Not enough disk space for $maxFileCount NFTs. $needed are needed.');
       } else {
         StreamPrint.prn(_message(maxFileCount));
       }
@@ -86,6 +88,6 @@ class DiskSize {
     final barrier = filesize(_freeSpaceBarrierBytes);
     final freeCurrent = filesize(_freeSpaceCurrentBytes);
 
-    return '$prefix / $maxFileCount $type-FILE-SYSTEM FREE: $freeCurrent, KEEP: $barrier, NEEDED: $needed';
+    return '$prefix / $maxFileCount $type-DISK-SPACE FREE: $freeCurrent, KEEP: $barrier, NEEDED: $needed';
   }
 }
