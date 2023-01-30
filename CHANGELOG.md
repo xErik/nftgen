@@ -24,3 +24,10 @@
  
 - Streaming messages to UI
 - Package exposed via CLI
+
+## 0.0.6
+ 
+- NFT writing using isolates
+- NFT writing as PNG or JPG
+- NFT free disk space check, error message and exit.
+- Crunch-Command to crunch layers for faster NFT generation

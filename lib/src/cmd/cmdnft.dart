@@ -2,9 +2,7 @@ import 'dart:io';
 
 import 'package:args/command_runner.dart';
 import 'package:nftgen/framework/drawbase.dart';
-import 'package:nftgen/framework/nftcliexception.dart';
 import 'package:nftgen/framework/projectmodel.dart';
-import 'package:nftgen/main.dart';
 import 'package:nftgen/src/shared/io.dart';
 import 'package:nftgen/src/nft.dart';
 

@@ -19,6 +19,7 @@ void main() {
       await cli.meta(projectDir);
       await cli.rarity(projectDir);
       await cli.cid(projectDir, "NEW-CID");
+      await cli.crunch(projectDir, overwrite: true);
       await cli.nft(projectDir);
     } on NftException catch (e) {
       print(e.message);

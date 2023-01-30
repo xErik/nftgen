@@ -6,7 +6,6 @@ import 'package:nftgen/framework/projectmodel.dart';
 import 'package:nftgen/framework/streamprint.dart';
 import 'package:nftgen/src/shared/eta.dart';
 import 'package:nftgen/src/shared/pngquant.dart';
-import 'package:path/path.dart';
 
 class Crunch {
   static Future<void> crunchLayers(

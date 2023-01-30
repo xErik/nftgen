@@ -6,7 +6,9 @@ import 'dart:ui';
 import 'package:nftgen/framework/drawbase.dart';
 import 'package:nftgen/src/shared/stopper.dart';
 
+/// Draws NFTs using the faster Flutter Canvas.
 class DrawFlutter extends DrawBase {
+  /// Draws an NFT.
   @override
   Future<Uint8List> draw(int width, int height, List<File> imageFiles) async {
     final recorder = PictureRecorder();

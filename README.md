@@ -2,34 +2,11 @@
 
 NFT unique image generator and metadata analyzer. Package and CLI enabled.
 
-**TODO DOCS**
-
-During development:
-
-
--- Forked Code for Dart and Flutter
-
-dart run .\lib\main.dart nft -f .\project\ -s 5
-
-For Flutter-EXE testing 
-
-flutter run .\tool\lib\exe.dart -d windows --dart-entrypoint-args nft,-f,.\project\,-s,5
-
--- Build EXE
-
-.\tool\build_exe.bat
-
-
-
-
-
-
-
-
-
 **nftgen EXE**
 
 A [ready-to-use command line EXE](https://github.com/xErik/nftgen/releases) is available. Always do a security check when downloading executables.
+
+The EXE uses a way faster drawing mechanism than just relying on Dart.
 
 **General NFT Procedure** 
 
@@ -37,10 +14,11 @@ A [ready-to-use command line EXE](https://github.com/xErik/nftgen/releases) is a
 2. **Manually**: Adjust probabilities in project-file  
 3. Generate NFT metadata files
 4. Analyse rarity distribution, backtrace to 2.
-5. Generate NFT images
-6. **Manually**: Upload NFT images and get a CID
-7. Update all metadata files with CID 
-8. **Manually**: Upload metadata files
+5. Crunch layers images for faster NFT generation
+6. Generate NFT images
+7. **Manually**: Upload NFT images and get a CID
+8. Update all metadata files with CID 
+9. **Manually**: Upload metadata files
 
 Which translates to these commands:
 
@@ -48,6 +26,7 @@ Which translates to these commands:
 2. ( ... )
 3. `nftgen meta ...`
 4. `nftgen rarity ...`
+5. `nftgen crunch ...`
 5. `nftgen nft ...`
 6. ( ... )
 7. `nftgen cid ...`
@@ -60,7 +39,8 @@ dart pub global activate nftgen
 
 nftgen init init -f ./project -l ./project/layers -n "Your NFT" -o
 nftgen meta -f ./project    
-nftgen rarity -f ./project  
+nftgen rarity -f ./project
+nftgen crunch -f ./project
 nftgen nft -f ./project      
 nftgen cid -f ./project -c yourCID  
 ```
@@ -180,6 +160,7 @@ try {
     await cli.meta(projectDir);
     await cli.rarity(projectDir);
     await cli.cid(projectDir, "NEW-CID");
+    await cli.crunch(projectDir, overwrite: true);
     await cli.nft(projectDir);
 } on NftCliException catch (e) {
     print(e.message);
@@ -212,6 +193,8 @@ Global options:
 
 Available commands:
   cid      Updates CID of generated metadata
+  crunch   Crunches layer PNGs
+  demo     Generates 50 NFT images based on layers
   init     Initiates a new project
   meta     Generates NFT metadata
   nft      Generates NFT images based on metadata
@@ -219,6 +202,28 @@ Available commands:
 
 Run "nftgen help <command>" for more information about a command.
 ```
+
+## Development Notes
+
+### DART Code
+
+This call re-routes to the `.\lib` folder:
+
+`dart run .\bin\nftgen.dart nft -f .\project\ -s 5`
+
+### FLUTTER EXE
+
+#### Build EXE
+
+The EXE will be placed on the `.\bin` folder:
+
+`.\tool\build_exe.bat`
+
+#### Testing the PRE-EXE-BUILD
+
+The parameters are to be specified using `--dart-entrypoint-args`:
+
+`flutter run .\tool\lib\exe.dart -d windows --dart-entrypoint-args nft,-f,.\project\,-s,5`
 
 ## References
 

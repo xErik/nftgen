@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:filesize/filesize.dart';
 import 'package:image/image.dart';
 import 'package:isolate_pool_2/isolate_pool_2.dart';
-import 'package:nftgen/framework/nftcliexception.dart';
 import 'package:nftgen/src/shared/disksize.dart';
 import 'package:nftgen/src/shared/pngquant.dart';
 import 'package:nftgen/src/shared/eta.dart';

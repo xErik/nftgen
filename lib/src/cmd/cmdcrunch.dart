@@ -24,7 +24,7 @@ class CrunchCommand extends Command {
           abbr: "q",
           help: 'The crunch quality',
           valueHelp: 'int between 1 (slow) and 11 (fast)',
-          defaultsTo: "4")
+          defaultsTo: "11")
       ..addFlag("overwrite",
           abbr: "o", defaultsTo: false, help: 'Re-crunch all layer files?')
       ..addFlag("kill",

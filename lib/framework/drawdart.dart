@@ -5,7 +5,9 @@ import 'package:nftgen/framework/drawbase.dart';
 import 'package:nftgen/src/shared/stopper.dart';
 import 'package:image/image.dart' as ig;
 
+/// Draws NFTs using the pure Dart `image` package.
 class DrawDart extends DrawBase {
+  /// Draws an NFT.
   @override
   Future<Uint8List> draw(int width, int height, List<File> imageFiles) async {
     final canvas = ig.Image(width: width, height: height);

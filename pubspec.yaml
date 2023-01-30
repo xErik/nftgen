@@ -1,10 +1,9 @@
 name: nftgen
-description: NFT unique image generator and metadata analyzer, available as package and CLI.
-version: 0.0.5+1
+description: NFT unique image generator and metadata analyzer, available as Dart package, CLI, EXE.
+version: 0.0.6
 repository: https://github.com/xErik/nftgen
 issue_tracker: https://github.com/xErik/nftgen/issues
 keywords: nft, crypto
-publish_to: none 
 
 environment:
   sdk: '>=2.18.6 <3.0.0'

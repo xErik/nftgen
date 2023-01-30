@@ -153,6 +153,7 @@ class ProjectModel {
     );
   }
 
+  /// Saves this `ProjectModel` to the specified folder.
   Future saveToFolder(Directory projectDir) async {
     final projectFile = Io.getProject(projectDir);
     await Io.writeJson(projectFile, toJson());
@@ -221,10 +222,12 @@ class ProjectModel {
     return encoder.convert(toJson());
   }
 
+  /// How many layers does the project have.
   int getLayerCount() {
     return layers.length;
   }
 
+  /// How many files (in layer folders) does this project have?
   int getFileCount() {
     int files = 0;
     for (var layer in layers) {
@@ -233,6 +236,11 @@ class ProjectModel {
     return files;
   }
 
+  /// How many NFT permutations are possible, assuming each
+  /// file has the same chance / weight to be used.
+  ///
+  /// Not meaningful for generating weighted NFTs. The returned
+  /// number provides a basic orientation.
   int getCombinationCount() {
     int combinations = 0;
     for (var layer in layers) {
