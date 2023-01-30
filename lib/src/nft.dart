@@ -121,7 +121,6 @@ class Nft {
       [DrawBase? drawService,
       bool isWriteJpg = true,
       int jpqQuality = 50]) async {
-    // try {
     final etaMain = Eta();
     final sep = Platform.pathSeparator;
     final ProjectModel model = await ProjectModel.loadFromFolder(projectDir);
