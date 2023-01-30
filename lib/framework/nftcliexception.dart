@@ -2,7 +2,7 @@
 /// invocating packages.
 ///
 /// Is returned when not being called on the CLI.
-abstract class NftException {
+abstract class NftException implements Exception {
   String message;
   NftException(this.message);
 }

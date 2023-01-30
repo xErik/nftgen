@@ -63,12 +63,11 @@ class NftCommand extends Command {
     Io.assertExistsFolder(model.metaDir);
     Io.assertExistsFolder(model.layerCrunchDir);
 
-    // try {
-    //   await crunch(projectDir.path, overwrite: isForceRecrunch);
-    // } on NftCliException catch (e) {
-    //   // in case
-    // }
-    await Nft.generateNft(projectDir, size, model.layerCrunchDir,
-        model.imageDir, model.metaDir, drawService, isWriteJpg, jpgQuality);
+    try {
+      await Nft.generateNft(projectDir, size, model.layerCrunchDir,
+          model.imageDir, model.metaDir, drawService, isWriteJpg, jpgQuality);
+    } on NftCliException catch (e) {
+      print(e.message);
+    }
   }
 }

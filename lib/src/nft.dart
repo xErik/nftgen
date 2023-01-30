@@ -7,12 +7,14 @@ import 'package:humanize_big_int/humanize_big_int.dart';
 import 'package:isolate_pool_2/isolate_pool_2.dart';
 import 'package:nftgen/framework/drawbase.dart';
 import 'package:nftgen/framework/drawdart.dart';
+import 'package:nftgen/framework/nftcliexception.dart';
 import 'package:nftgen/framework/projectmodel.dart';
 import 'package:nftgen/framework/streamprint.dart';
 import 'package:nftgen/src/nft/writeimage.dart';
 import 'package:nftgen/src/shared/stopper.dart';
 import 'package:nftgen/src/shared/eta.dart';
 import 'package:path/path.dart';
+// import 'package:pool/pool.dart';
 
 import 'nft/cachefile.dart' as nft;
 import 'nft/cache.dart';
@@ -119,14 +121,18 @@ class Nft {
       [DrawBase? drawService,
       bool isWriteJpg = true,
       int jpqQuality = 50]) async {
+    // try {
     final etaMain = Eta();
     final sep = Platform.pathSeparator;
     final ProjectModel model = await ProjectModel.loadFromFolder(projectDir);
     final confLayers = model.layers;
     final canvasService = drawService ?? DrawDart();
-    final waitList = <Future>[];
+    final futures = <Future>[];
+
     final writePool = IsolatePool(max(Platform.numberOfProcessors - 2, 2));
-    writePool.start();
+    await writePool.start();
+
+    bool isStopped = false;
 
     StreamPrint.prn('Using draw service: ${canvasService.runtimeType}');
 
@@ -142,38 +148,70 @@ class Nft {
     }
     imagesDir.createSync(recursive: true);
 
-    for (var nftId = 1; nftId <= confGenerateNfts; nftId++) {
-      final eta = Eta(etaMain.start);
-      Stopper.assertNotStopped();
-      imageFiles.clear();
+    try {
+      for (var nftId = 1; nftId <= confGenerateNfts; nftId++) {
+        if (isStopped == true) {
+          // print('STOPPED!');
+          break;
+        }
 
-      final metaJson = await Io.readJson(
-          File('${metaDir.path + sep + nftId.toString()}.json'));
+        final eta = Eta(etaMain.start);
+        Stopper.assertNotStopped();
+        imageFiles.clear();
 
-      for (var attribute in metaJson['attributes']) {
-        final String nftType = attribute['trait_type'];
-        final String nftValue = attribute['value'];
+        final metaJson = await Io.readJson(
+            File('${metaDir.path + sep + nftId.toString()}.json'));
 
-        imageFiles.add(
-            cacheFile.getFile(nftType, nftValue, layersDir.path, confLayers));
-      }
+        for (var attribute in metaJson['attributes']) {
+          final String nftType = attribute['trait_type'];
+          final String nftValue = attribute['value'];
 
-      final file = File(
-          '${imagesDir.path}${Platform.pathSeparator}$nftId.${isWriteJpg ? "jpg" : "png"}');
-      final Uint8List pngBytes = await canvasService.draw(
-          nftSize["width"]!, nftSize["height"]!, imageFiles);
+          imageFiles.add(
+              cacheFile.getFile(nftType, nftValue, layersDir.path, confLayers));
+        }
 
-      waitList.add(writePool.scheduleJob(WriteImage(
+        final file = File(
+            '${imagesDir.path}${Platform.pathSeparator}$nftId.${isWriteJpg ? "jpg" : "png"}');
+        final Uint8List pngBytes = await canvasService.draw(
+            nftSize["width"]!, nftSize["height"]!, imageFiles);
+
+        final job = WriteImage(
           eta,
           nftId,
           confGenerateNfts,
           pngBytes.buffer.asUint8List(),
           file,
           jpqQuality,
-          nftId.toString())));
+          nftId.toString(),
+        );
+
+        // print('ADDING job ...');
+
+        final future = writePool.scheduleJob(job);
+
+        future.then((_) {}, onError: (a) {
+          // print("CAUGHT WHILE ADDING JOBS: ${a.toString()}");
+          isStopped = true;
+        });
+
+        futures.add(future);
+      }
+      // print('WAIT');
+      await Future.wait(futures, eagerError: true);
+    } on NftException catch (_) {
+      // print('NFT: $e');
+      rethrow;
+    } catch (e) {
+      // print('NON-NFT: $e');
+      rethrow;
+    } finally {
+      try {
+        // print('STOP');
+        writePool.stop();
+      } catch (e) {
+        // ignore
+      }
     }
-    await Future.wait(waitList);
-    writePool.stop();
   }
 
   /// Returns the width and height of the first image found in `layersDir`:

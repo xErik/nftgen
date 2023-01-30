@@ -121,6 +121,9 @@ Future<dynamic> main(List<String> args, [DrawBase? drawService]) async {
       exit(0);
     }
   } catch (error, stack) {
+    // stderr.writeln(error);
+    // stderr.writeln(stack);
+
     if (error is NftException) {
       stderr.writeln(error.message);
     } else {
