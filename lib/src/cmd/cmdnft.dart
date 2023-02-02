@@ -25,10 +25,6 @@ class NftCommand extends Command {
           help: 'The number of NFTs to generate',
           valueHelp: 'int',
           defaultsTo: "-1")
-      // ..addFlag("crunch-layers-forced",
-      //     abbr: "c",
-      //     defaultsTo: false,
-      //     help: 'Force a re-crunch of all layer files?')
       ..addFlag("jpg",
           aliases: ["jpeg"],
           abbr: "j",

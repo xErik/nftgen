@@ -12,6 +12,8 @@ dev_dependencies:
   lints: ^2.0.0
   test: ^1.16.0
   flutter_lints: ^2.0.0
+  archive: ^3.3.6
+  commandline_or_gui_windows: ^2.1.2
 
 dependencies:
   flutter:
@@ -23,7 +25,6 @@ dependencies:
   image: ^4.0.8
   io: ^1.0.3
   path: ^1.8.2
-  commandline_or_gui_windows: ^2.1.2
   collection: ^1.16.0
   filesize: ^2.0.1
   isolate_pool_2: ^1.0.4

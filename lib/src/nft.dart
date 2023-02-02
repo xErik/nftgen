@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:filesize/filesize.dart';
 import 'package:humanize_big_int/humanize_big_int.dart';
 import 'package:isolate_pool_2/isolate_pool_2.dart';
 import 'package:nftgen/framework/drawbase.dart';
@@ -10,10 +11,12 @@ import 'package:nftgen/framework/drawdart.dart';
 import 'package:nftgen/framework/nftcliexception.dart';
 import 'package:nftgen/framework/projectmodel.dart';
 import 'package:nftgen/framework/streamprint.dart';
-import 'package:nftgen/src/nft/writeimage.dart';
+import 'package:nftgen/src/nft/writeimagejob.dart';
+import 'package:nftgen/src/shared/disksize.dart';
 import 'package:nftgen/src/shared/stopper.dart';
 import 'package:nftgen/src/shared/eta.dart';
 import 'package:path/path.dart';
+import 'package:universal_disk_space/universal_disk_space.dart';
 // import 'package:pool/pool.dart';
 
 import 'nft/cachefile.dart' as nft;
@@ -133,6 +136,8 @@ class Nft {
 
     bool isStopped = false;
 
+    DiskSize().resetAll();
+
     StreamPrint.prn('Using draw service: ${canvasService.runtimeType}');
 
     int confGenerateNfts = size > -1 ? size : model.generateNfts;
@@ -149,13 +154,19 @@ class Nft {
 
     try {
       for (var nftId = 1; nftId <= confGenerateNfts; nftId++) {
+        try {
+          Stopper.assertNotStopped();
+        } catch (_) {
+          isStopped = true;
+        }
+
         if (isStopped == true) {
-          // print('STOPPED!');
+          print('STOPPED!');
           break;
         }
 
         final eta = Eta(etaMain.start);
-        Stopper.assertNotStopped();
+
         imageFiles.clear();
 
         final metaJson = await Io.readJson(
@@ -174,21 +185,23 @@ class Nft {
         final Uint8List pngBytes = await canvasService.draw(
             nftSize["width"]!, nftSize["height"]!, imageFiles);
 
-        final job = WriteImage(
-          eta,
-          nftId,
-          confGenerateNfts,
-          pngBytes.buffer.asUint8List(),
-          file,
-          jpqQuality,
-          nftId.toString(),
-        );
+        final job = WriteImage(pngBytes.buffer.asUint8List(), file, jpqQuality);
 
         // print('ADDING job ...');
 
         final future = writePool.scheduleJob(job);
 
-        future.then((_) {}, onError: (a) {
+        future.then((cruncPerc) async {
+          // print(' XXX $cruncPerc');
+          try {
+            await DiskSize().addFile(file.statSync().size, confGenerateNfts);
+          } catch (e) {
+            // print('EXX: $e');
+            isStopped = true;
+          }
+          eta.write(nftId, confGenerateNfts,
+              '${file.path} ${filesize(file.statSync().size)}$cruncPerc');
+        }, onError: (a) {
           // print("CAUGHT WHILE ADDING JOBS: ${a.toString()}");
           isStopped = true;
         });
@@ -197,15 +210,22 @@ class Nft {
       }
       // print('WAIT');
       await Future.wait(futures, eagerError: true);
-    } on NftException catch (_) {
-      // print('NFT: $e');
-      rethrow;
+      // } on NftStopException catch (e) {
+      //   print('STOPPED EXC: $e');
+      //   rethrow;
+      // } on NftNotEnoughFreespaceException catch (e) {
+      //   print('DISK SPACE EXC: $e');
+      //   // rethrow;
+      // } on NftException catch (e) {
+      //   print('GENERIC NFT EXC: $e');
+      //   rethrow;
     } catch (e) {
-      // print('NON-NFT: $e');
+      print('EXC: $e');
       rethrow;
     } finally {
       try {
-        // print('STOP');
+        // print('STOP ISO');
+        StreamPrint.prn('Stopping NFT generation ...');
         writePool.stop();
       } catch (e) {
         // ignore

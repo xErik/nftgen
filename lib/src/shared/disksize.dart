@@ -31,14 +31,6 @@ class DiskSize {
 
   DiskSize._internal();
 
-  /// Use `DiskSpace().reset()` before for each run writing files.
-  void reset() {
-    _diskSpaceRef = null;
-    _spaceUsedCurrentBytes.clear();
-    _freeSpaceCurrentBytes = 0;
-    _spaceUsedExpectedBytes = 0;
-  }
-
   Future<bool> _hasFreeSpace(int maxFileCount) async {
     _diskSpaceRef ??= DiskSpace();
     await _diskSpaceRef!.scan();
@@ -57,6 +49,14 @@ class DiskSize {
         max(0, _freeSpaceCurrentBytes - _spaceUsedExpectedBytes);
 
     return freeSpaceExpected <= _freeSpaceBarrierBytes;
+  }
+
+  /// Use `DiskSpace().reset()` before for each run writing files.
+  void resetAll() {
+    _diskSpaceRef = null;
+    _spaceUsedCurrentBytes.clear();
+    _freeSpaceCurrentBytes = 0;
+    _spaceUsedExpectedBytes = 0;
   }
 
   Future addFile(int fileSize, int maxFileCount) async {

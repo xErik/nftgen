@@ -49,19 +49,9 @@ Future<dynamic> cid(String projectDir, String cid) async =>
 
 /// Runs NFT image generation based on metadata
 Future<dynamic> nft(String projectDir,
-        {int size = -1,
-        DrawBase? drawServiceBase,
-        bool crunchLayersForces = false}) async =>
-    await main([
-      "nft",
-      "-f",
-      projectDir,
-      '-s',
-      size.toString(),
-      "--crunch-layers-forced",
-      crunchLayersForces.toString(),
-      "--no-kill"
-    ], drawServiceBase);
+        {int size = -1, DrawBase? drawServiceBase}) async =>
+    await main(["nft", "-f", projectDir, '-s', size.toString(), "--no-kill"],
+        drawServiceBase);
 
 /// Runs NFT image generation based on metadata
 Future<dynamic> demo(String projectDir, String layerDir, String name,

@@ -1,19 +1,21 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:io/io.dart';
+import 'package:isolate_pool_2/isolate_pool_2.dart';
 import 'package:nftgen/framework/nftcliexception.dart';
 import 'package:nftgen/framework/projectmodel.dart';
 import 'package:nftgen/framework/streamprint.dart';
+import 'package:nftgen/src/crunch/crunchjob.dart';
 import 'package:nftgen/src/shared/eta.dart';
-import 'package:nftgen/src/shared/pngquant.dart';
 
 class Crunch {
   static Future<void> crunchLayers(
       ProjectModel projectModel, int crunchQuality) async {
-    final sep = Platform.pathSeparator;
-    final eta = Eta();
+    final etaMain = Eta();
     final List<Directory> work = [];
-    final quantExe = PngQuant.exePath;
+    final pool = IsolatePool(max(Platform.numberOfProcessors - 2, 2));
+    await pool.start();
 
     if (crunchQuality < 1 || crunchQuality > 11) {
       throw NftCliException('Crunch quality -q must be between 1 and 11.');
@@ -35,7 +37,9 @@ class Crunch {
       work.add(Directory(dir.path));
     });
 
-    final fileCount = crunchDir
+    StreamPrint.progress('Crunching ...');
+
+    final fileCountAll = crunchDir
         .listSync(recursive: true)
         .whereType<File>()
         .where((element) => element.path.endsWith('.png'))
@@ -43,51 +47,63 @@ class Crunch {
 
     final Map<String, List<int>> fileShrink = {};
 
+    final List<Future> futures = [];
+
     for (Directory dir in work) {
-      dir
-          .listSync()
-          .whereType<File>()
-          .where((element) => element.path.endsWith('.png'))
-          .forEach((png) {
-        final pngSize = png.statSync().size;
-        fileShrink[png.path] = [pngSize];
-      });
-
-      final str = "${dir.path}$sep*.png";
-
-      Process.runSync(
-          quantExe.path,
-          [
-            '--speed',
-            crunchQuality.toString(),
-            '--force',
-            '--skip-if-larger',
-            '--ext',
-            '.png',
-            // '--verbose',
-            // '"${dir.path}$sep*.png"'
-            str
-          ],
-          runInShell: true);
-
-      dir
-          .listSync()
-          .whereType<File>()
-          .where((element) => element.path.endsWith('.png'))
-          .forEach((png) {
-        final pngSize = png.statSync().size;
-        fileShrink[png.path]!.add(pngSize);
-      });
-
-      eta.write(fileShrink.length, fileCount,
-          "Crunch average: ${_avgShrunk(fileShrink)} %");
+      _fileShrink(dir, fileShrink);
     }
+
+    for (Directory dir in work) {
+      final eta = Eta(etaMain.start);
+      // _fileShrink(dir, fileShrink);
+
+      final fileCountDir = dir
+          .listSync(recursive: true)
+          .whereType<File>()
+          .where((element) => element.path.endsWith('.png'))
+          .length;
+
+      final future = pool.scheduleJob(CrunchJob(crunchQuality, dir));
+
+      future.then((value) {
+        _fileShrink(dir, fileShrink);
+
+        eta.write(fileCountDir, fileCountAll, "Crunch average: ??? %");
+
+        // eta.write(fileCountDir, fileCountAll,
+        //     "Crunch average: ${_avgShrunk(fileShrink)} %");
+      }).onError((error, stackTrace) {
+        print(error);
+        throw error!;
+      });
+
+      futures.add(future);
+    }
+    // print(futures);
+    await Future.wait(futures, eagerError: true);
+  }
+
+  static _fileShrink(Directory dir, Map<String, List<int>> fileShrink) {
+    dir
+        .listSync()
+        .whereType<File>()
+        .where((element) => element.path.endsWith('.png'))
+        .forEach((png) {
+      final pngSize = png.statSync().size;
+      if (fileShrink.containsKey(png.path) == false) {
+        fileShrink[png.path] = [pngSize];
+      } else {
+        fileShrink[png.path]!.add(pngSize);
+      }
+    });
   }
 
   static int _avgShrunk(Map<String, List<int>> fileShrink) {
     List<int> shrinking = [];
 
     for (List<int> vals in fileShrink.values) {
+      print(vals);
+
       final shrinkPerc =
           ((100 / vals.elementAt(0)) * vals.elementAt(1)).toInt();
       shrinking.add(shrinkPerc);

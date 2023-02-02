@@ -5,6 +5,11 @@
 abstract class NftException implements Exception {
   String message;
   NftException(this.message);
+
+  @override
+  String toString() {
+    return message;
+  }
 }
 
 /// Generic exception.
