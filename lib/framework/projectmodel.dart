@@ -43,6 +43,9 @@ class ProjectModel {
   String name;
   String cidCode;
   int generateNfts;
+  String generateNftsFormat;
+  int generateNftsJpgQuality;
+  int generateNftsPngQuality;
   List<ProjectLayerModel> layers;
   Directory layerDir;
   Directory layerCrunchDir;
@@ -59,6 +62,9 @@ class ProjectModel {
       this.name,
       this.cidCode,
       this.generateNfts,
+      this.generateNftsFormat,
+      this.generateNftsJpgQuality,
+      this.generateNftsPngQuality,
       // this.weightsFactor,
       this.layers,
       //
@@ -76,12 +82,21 @@ class ProjectModel {
 
   /// Returns model with initial values. Some of the model's values are set
   /// to sensible defaults.
-  static ProjectModel init(String name, int generateNfts,
-      List<ProjectLayerModel> projectLayers, Directory layersDir) {
+  static ProjectModel init(
+      String name,
+      int generateNfts,
+      String generateNftsFormat,
+      int generateNftsJpgQuality,
+      int generateNftsPngQuality,
+      List<ProjectLayerModel> projectLayers,
+      Directory layersDir) {
     return ProjectModel(
       name,
       cidDefaultCode,
       generateNfts,
+      generateNftsFormat,
+      generateNftsJpgQuality,
+      generateNftsPngQuality,
       projectLayers,
       Directory("meta"),
       Directory(normalize(layersDir.absolute.path)),
@@ -121,6 +136,9 @@ class ProjectModel {
       projectJson['name'] as String,
       projectJson["cidCode"] as String,
       projectJson["generateNfts"] as int,
+      projectJson["generateNftsFormat"] as String,
+      projectJson["generateNftsJpgQuality"] as int,
+      projectJson["generateNftsPngQuality"] as int,
       // projectJson['weightsFactor'],
       // projectJson['layers'],
       layers,
@@ -165,6 +183,9 @@ class ProjectModel {
       '',
       '',
       0,
+      'jpg',
+      80,
+      11,
       [],
       Directory(''),
       Directory(''),
@@ -201,6 +222,10 @@ class ProjectModel {
       "name": name,
       "cidCode": cidCode,
       "generateNfts": generateNfts,
+      "generateNftsFormat": generateNftsFormat,
+      "generateNftsJpgQuality": generateNftsJpgQuality,
+      "generateNftsPngQuality": generateNftsPngQuality,
+
       // "weightsFactor": weightsFactor,
       "layers": layersJson,
       //

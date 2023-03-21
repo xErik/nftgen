@@ -8,6 +8,7 @@ import 'package:nftgen/framework/projectmodel.dart';
 import 'package:nftgen/framework/streamprint.dart';
 import 'package:nftgen/src/crunch/crunchjob.dart';
 import 'package:nftgen/src/shared/eta.dart';
+import 'package:nftgen/src/shared/stopper.dart';
 
 class Crunch {
   static Future<void> crunchLayers(
@@ -53,9 +54,21 @@ class Crunch {
       _fileShrink(dir, fileShrink);
     }
 
+    bool isStopped = false;
+
     for (Directory dir in work) {
+      try {
+        Stopper.assertNotStopped();
+      } catch (_) {
+        isStopped = true;
+      }
+
+      if (isStopped == true) {
+        StreamPrint.warn('Stopping ...');
+        break;
+      }
+
       final eta = Eta(etaMain.start);
-      // _fileShrink(dir, fileShrink);
 
       final fileCountDir = dir
           .listSync(recursive: true)
@@ -98,17 +111,17 @@ class Crunch {
     });
   }
 
-  static int _avgShrunk(Map<String, List<int>> fileShrink) {
-    List<int> shrinking = [];
+  // static int _avgShrunk(Map<String, List<int>> fileShrink) {
+  //   List<int> shrinking = [];
 
-    for (List<int> vals in fileShrink.values) {
-      print(vals);
+  //   for (List<int> vals in fileShrink.values) {
+  //     print(vals);
 
-      final shrinkPerc =
-          ((100 / vals.elementAt(0)) * vals.elementAt(1)).toInt();
-      shrinking.add(shrinkPerc);
-    }
+  //     final shrinkPerc =
+  //         ((100 / vals.elementAt(0)) * vals.elementAt(1)).toInt();
+  //     shrinking.add(shrinkPerc);
+  //   }
 
-    return shrinking.reduce((sum, val) => sum + val) ~/ fileShrink.length;
-  }
+  //   return shrinking.reduce((sum, val) => sum + val) ~/ fileShrink.length;
+  // }
 }

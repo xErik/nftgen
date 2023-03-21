@@ -5,28 +5,38 @@ import 'package:nftgen/src/shared/pngquant.dart';
 
 /// Job for `IsolatePool`.
 class CrunchJob extends PooledJob {
-  final quantExe = PngQuant.exePath;
-  final int crunchQuality;
-  final Directory dir;
+  final _quantExe = PngQuant.exePath;
+  final int _crunchQuality;
+  final Directory _dir;
+  Process? _process;
 
-  CrunchJob(this.crunchQuality, this.dir);
+  CrunchJob(this._crunchQuality, this._dir);
 
   @override
-  Future<void> job() async {
-    final str = "${dir.path}${Platform.pathSeparator}*.png";
+  Future<int> job() async {
+    final str = "${_dir.path}${Platform.pathSeparator}*.png";
 
-    await Process.run(
-        quantExe.path,
+    _process = await Process.start(
+        _quantExe.path,
         [
           '--speed',
-          crunchQuality.toString(),
+          _crunchQuality.toString(),
           '--force',
           '--skip-if-larger',
           '--ext',
           '.png',
-          // '--verbose',
           str
         ],
         runInShell: true);
+
+    stdout.addStream(_process!.stdout);
+    stderr.addStream(_process!.stderr);
+
+    return await _process!.exitCode;
+  }
+
+  @override
+  Future<bool> stop() async {
+    return _process == null ? false : _process!.kill();
   }
 }

@@ -8,7 +8,6 @@ import 'package:humanize_big_int/humanize_big_int.dart';
 import 'package:isolate_pool_2/isolate_pool_2.dart';
 import 'package:nftgen/framework/drawbase.dart';
 import 'package:nftgen/framework/drawdart.dart';
-import 'package:nftgen/framework/nftcliexception.dart';
 import 'package:nftgen/framework/projectmodel.dart';
 import 'package:nftgen/framework/streamprint.dart';
 import 'package:nftgen/src/nft/writeimagejob.dart';
@@ -16,7 +15,6 @@ import 'package:nftgen/src/shared/disksize.dart';
 import 'package:nftgen/src/shared/stopper.dart';
 import 'package:nftgen/src/shared/eta.dart';
 import 'package:path/path.dart';
-import 'package:universal_disk_space/universal_disk_space.dart';
 // import 'package:pool/pool.dart';
 
 import 'nft/cachefile.dart' as nft;
@@ -123,7 +121,8 @@ class Nft {
       Directory layersDir, Directory imagesDir, Directory metaDir,
       [DrawBase? drawService,
       bool isWriteJpg = true,
-      int jpqQuality = 50]) async {
+      int jpqQuality = 80,
+      int pngQuality = 11]) async {
     final etaMain = Eta();
     final sep = Platform.pathSeparator;
     final ProjectModel model = await ProjectModel.loadFromFolder(projectDir);
@@ -185,7 +184,8 @@ class Nft {
         final Uint8List pngBytes = await canvasService.draw(
             nftSize["width"]!, nftSize["height"]!, imageFiles);
 
-        final job = WriteImage(pngBytes.buffer.asUint8List(), file, jpqQuality);
+        final job = WriteImage(
+            pngBytes.buffer.asUint8List(), file, jpqQuality, pngQuality);
 
         // print('ADDING job ...');
 

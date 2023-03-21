@@ -9,8 +9,10 @@ class WriteImage extends PooledJob {
   final Uint8List pngBytes;
   final File file;
   final int jpgQuality;
+  final int pngQuality;
+  Process? _process;
 
-  WriteImage(this.pngBytes, this.file, this.jpgQuality);
+  WriteImage(this.pngBytes, this.file, this.jpgQuality, this.pngQuality);
 
   @override
   Future<String> job() async {
@@ -26,11 +28,12 @@ class WriteImage extends PooledJob {
 
       final sizeOriginal = file.statSync().size;
 
-      Process.runSync(
+      _process = await Process.start(
+          // Process.runSync(
           PngQuant.exePath.path,
           [
             '--speed',
-            "11",
+            pngQuality.toString(),
             '--force',
             '--skip-if-larger',
             '--ext',
@@ -48,5 +51,10 @@ class WriteImage extends PooledJob {
     //     '${file.path} ${filesize(file.statSync().size)}$cruncPerc');
 
     return cruncPerc;
+  }
+
+  @override
+  Future<bool> stop() async {
+    return _process == null ? false : _process!.kill();
   }
 }

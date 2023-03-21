@@ -68,8 +68,8 @@ class Project {
 
     generateNfts = min(10000, (generateNfts * factorMaxNft).toInt());
 
-    final projectModel =
-        ProjectModel.init(name, generateNfts, layerEntries, layerDir);
+    final projectModel = ProjectModel.init(
+        name, generateNfts, "jpg", 80, 11, layerEntries, layerDir);
 
     await projectModel.saveToFolder(projectDir);
 
