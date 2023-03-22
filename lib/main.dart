@@ -49,13 +49,7 @@ Future<dynamic> cid(String projectDir, String cid) async =>
 
 /// Runs NFT image generation based on metadata
 Future<dynamic> nft(String projectDir,
-    {int size = -1,
-    DrawBase? drawServiceBase,
-    bool jpg = true,
-    int jpgQuality = 80,
-    int pngCrunch = 11}) async {
-  final jpeg = (jpg == true) ? "--jpg" : "--no-jpg";
-
+    {int size = -1, DrawBase? drawServiceBase}) async {
   await main([
     "nft",
     "-f",
@@ -63,11 +57,6 @@ Future<dynamic> nft(String projectDir,
     '-s',
     size.toString(),
     "--no-kill",
-    jpeg,
-    '-q',
-    jpgQuality.toString(),
-    '-c',
-    pngCrunch.toString()
   ], drawServiceBase);
 }
 

@@ -25,21 +25,6 @@ class NftCommand extends Command {
           help: 'The number of NFTs to generate',
           valueHelp: 'int',
           defaultsTo: "-1")
-      ..addFlag("jpg",
-          aliases: ["jpeg"],
-          abbr: "j",
-          defaultsTo: true,
-          help: 'Write NFTs as JPGs?')
-      ..addOption('jpg-quality',
-          abbr: "q",
-          help: 'The JPG quality between 1 and 100 (best)',
-          valueHelp: 'int',
-          defaultsTo: "80")
-      ..addOption('png-crunch',
-          abbr: "c",
-          help: 'The PNG crunch between 1 (best) and 11 (fast)',
-          valueHelp: 'int',
-          defaultsTo: "11")
       ..addFlag("kill",
           abbr: "k",
           defaultsTo: true,
@@ -50,10 +35,6 @@ class NftCommand extends Command {
   run() async {
     Directory projectDir = Directory(argResults!["folder"]);
     int size = int.parse(argResults!["size"]);
-    // bool isForceRecrunch = argResults!["crunch-layers-forced"];
-    bool isWriteJpg = argResults!["jpg"];
-    int jpgQuality = int.parse(argResults!["jpg-quality"]);
-    int pngQuality = int.parse(argResults!["png-quality"]);
 
     File projectFile = Io.getProject(projectDir);
 
@@ -65,14 +46,15 @@ class NftCommand extends Command {
     Io.assertExistsFolder(model.layerCrunchDir);
 
     await Nft.generateNft(
-        projectDir,
-        size,
-        model.layerCrunchDir,
-        model.imageDir,
-        model.metaDir,
-        drawService,
-        isWriteJpg,
-        jpgQuality,
-        pngQuality);
+      projectDir,
+      size,
+      model.layerCrunchDir,
+      model.imageDir,
+      model.metaDir,
+      drawService,
+      model.generateNftsFormat == 'jpg',
+      model.generateNftsJpgQuality,
+      model.generateNftsPngQuality,
+    );
   }
 }
